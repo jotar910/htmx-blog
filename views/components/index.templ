@@ -1,0 +1,19 @@
+package components
+
+templ Index(main templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<title>Testing</title>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<link href="/dist/main.css" rel="stylesheet"/>
+		</head>
+		<body>
+			@main
+			<script type="text/javascript" src="/dist/bundle.js" defer></script>
+			<script type="text/javascript" src="/htmx/bundle.js" defer></script>
+			<script type="text/javascript" src="/tw-elements/dist/js/tw-elements.umd.min.js" defer></script>
+		</body>
+	</html>
+

@@ -1,0 +1,97 @@
+package components_articleslist
+
+import "github.com/jotar910/htmx-templ/internal/models"
+import "fmt"
+import "strconv"
+import "github.com/gomarkdown/markdown"
+import "github.com/microcosm-cc/bluemonday"
+
+templ ArticlesContainer(articleList *models.ArticleList, filters *models.ArticleListFilters) {
+	<section class="p-3">
+		@header(articleList.Total, filters.Term)
+		@list(articleList.Items)
+	</section>
+}
+
+templ ArticlesItemsResponse(items []models.ArticleItem) {
+	for _, item := range items {
+		@article(&item)
+	}
+}
+
+templ ArticlesCountResponse(total int) {
+	<span id="articles-counter" hx-swap-oob="#articles-counter" hx-swap="outerHTML">{ strconv.Itoa(total) }</span>
+}
+
+templ header(total int, term string) {
+	<header class="grid sm:grid-cols-[1fr_auto] mb-3">
+		<div class="grid">
+			<span class="text-xl">Articles</span>
+			<span class="text-gray-700 dark:text-gray-200">Number of results: <span id="articles-counter">({ strconv.Itoa(total) })</span></span>
+		</div>
+		@searchInput(term)
+	</header>
+}
+
+templ list(items []models.ArticleItem) {
+	<app-pinterest-layout class="flex flex-col flex-wrap content-between max-w-full" id="articles-search-results">
+		for _, item := range items {
+			@article(&item)
+		}
+	</app-pinterest-layout>
+}
+
+templ article(article *models.ArticleItem) {
+	<article class="grid max-h-[64rem] bg-base-100 dark:bg-base-300 shadow-lg rounded-lg hover:shadow-xl">
+		<a class="grid items-center overflow-hidden h-48 rounded-t-lg" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
+			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-h-full"/>
+		</a>
+		<div class="grid overflow-hidden p-5">
+			<a class="block truncate text-lg mb-4" title={ article.Title } href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>{ article.Title }</a>
+			<div class="special-scroll overflow-auto mb-4 prose">
+				{! rawHTML(mdToHTML(article.Summary)) }
+			</div>
+			<div class="content-date">{ article.Date.Format("Jan 02, 2006") }</div>
+		</div>
+	</article>
+}
+
+templ searchInput(term string) {
+	<script>
+		import { Input, initTE } from "tw-elements";
+
+        initTE({ Input });
+	</script>
+	<div class="relative mb-4 flex flex-row-reverse flex-wrap items-stretch min-w-[16rem] w-full">
+		<input
+ 			type="search"
+ 			class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&amp;:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+ 			id="articles-search"
+ 			name="searchTerm"
+ 			placeholder="Type query"
+ 			value={ term }
+ 			hx-get="/filtered"
+ 			hx-trigger="keyup changed delay:500ms, search"
+ 			hx-target="#articles-search-results"
+ 			hx-swap="innerHTML"
+ 			hx-params="searchTerm"
+		/>
+		<label
+ 			for="articles-search"
+ 			class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+		>Search</label>
+	</div>
+}
+
+func rawHTML(html string) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		_, err := io.WriteString(w, html)
+		return err
+	})
+}
+
+func mdToHTML(md string) string {
+	maybeUnsafeHTML := markdown.ToHTML([]byte(md), nil, nil)
+	html := bluemonday.UGCPolicy().SanitizeBytes(maybeUnsafeHTML)
+	return string(html)
+}

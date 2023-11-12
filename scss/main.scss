@@ -1,0 +1,44 @@
+@tailwind base;      /* This injects Tailwind's base styles, which include normalize.css and any base styles you configure. */
+@tailwind components; /* This injects any component classes you've defined in your Tailwind config or any Tailwind component plugins you're using. */
+@tailwind utilities;  /* This injects all of Tailwind's utility classes, which is the core of what Tailwind provides. */
+
+@layer base {
+    .special-scroll {
+      margin-right: -12px;
+      padding-right: 12px;
+    
+      &:hover {
+        &::-webkit-scrollbar-track {
+          box-shadow: inset 0 0 6px #0000000d;
+          background-color: #F5F5F5;
+        }
+    
+        &::-webkit-scrollbar-thumb {
+          display: block;
+        }
+      }
+      
+      &::-webkit-scrollbar {
+        cursor: pointer;
+        margin: 0 8px 8px 0;
+        width: 8px;
+      }
+    
+      &::-webkit-scrollbar-track {
+        border-radius: 10px;
+    
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        display: none;
+        border-radius: 10px;
+        box-shadow: inset 0 0 6px #0000004d;
+        background-color: var(--joes-color-light-gray);
+    
+        &:hover {
+          background-color: var(--joes-color-light-2-gray);
+        }
+      }
+    }
+}
+
