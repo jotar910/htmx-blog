@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"net/url"
 
 	"github.com/gin-gonic/gin"
 
@@ -24,7 +23,7 @@ func NewPostsHandler(postsService *services.PostsService) *PostsHandler {
 
 func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 	r.GET("/", func(c *gin.Context) {
-		filters := new(models.ArticleListFilters).FromRequest(c)
+		filters := new(models.ArticleListFilters).Decode(c)
 		list := ph.postsService.GetList(filters)
 		component := components.Index(components_articleslist.ArticlesContainer(list, filters))
 		c.HTML(http.StatusOK, "", component)
@@ -35,10 +34,10 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 		filters := &models.ArticleListFilters{Term: term}
 		list := ph.postsService.GetList(filters)
 
-		if filters.Term != "" {
-			v := url.Values{}
-			v.Set("searchTerm", filters.Term)
-			c.Header("HX-Push-Url", "?"+v.Encode())
+		if filters.Empty() {
+			c.Header("HX-Push-Url", "./")
+		} else {
+			c.Header("HX-Push-Url", "./?"+filters.Encode())
 		}
 
 		componentList := components_articleslist.ArticlesItemsResponse(list.Items)

@@ -57,11 +57,6 @@ templ article(article *models.ArticleItem) {
 }
 
 templ searchInput(term string) {
-	<script>
-		import { Input, initTE } from "tw-elements";
-
-        initTE({ Input });
-	</script>
 	<div class="relative mb-4 flex flex-row-reverse flex-wrap items-stretch min-w-[16rem] w-full">
 		<input
  			type="search"

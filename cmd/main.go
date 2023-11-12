@@ -19,8 +19,8 @@ func main() {
 	postsHandler.RegisterPosts(&r.RouterGroup)
 
 	r.Static("/htmx", "./public/htmx")
+	r.Static("/tw-elements", "./node_modules/tw-elements")
 	r.Static("/assets", "./public/assets")
 	r.Static("/dist", "./dist")
-	r.Static("/tw-elements", "./node_modules/tw-elements")
 	r.Run()
 }
