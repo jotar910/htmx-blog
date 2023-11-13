@@ -9,6 +9,7 @@ import (
 	"github.com/jotar910/htmx-templ/internal/services"
 	"github.com/jotar910/htmx-templ/views/components"
 	components_articleslist "github.com/jotar910/htmx-templ/views/components/articles-list"
+	components_mostseen "github.com/jotar910/htmx-templ/views/components/most-seen"
 )
 
 type PostsHandler struct {
@@ -25,7 +26,10 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 	r.GET("/", func(c *gin.Context) {
 		filters := new(models.ArticleListFilters).Decode(c)
 		list := ph.postsService.GetList(filters)
-		component := components.Index(components_articleslist.ArticlesContainer(list, filters))
+		articlesList := components_articleslist.ArticlesContainer(list, filters)
+		mostSeen := components_mostseen.MostSeenContainer(list.Items)
+		homepage := components.Homepage(mostSeen, articlesList)
+		component := components.Index(homepage)
 		c.HTML(http.StatusOK, "", component)
 	})
 
