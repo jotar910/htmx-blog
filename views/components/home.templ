@@ -1,7 +1,11 @@
 package components
 
-templ Homepage(mostSeen, articlesList templ.Component) {
+templ Homepage(highlights, mostSeen, articlesList templ.Component) {
 	<div class="p-4 md:p-6 lg:p-8 xl:p-10">
+		{! highlights }
+		<hr
+ 			class="my-20 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50"
+		/>
 		{! mostSeen }
 		<hr
  			class="my-20 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50"

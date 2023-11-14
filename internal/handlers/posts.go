@@ -9,6 +9,7 @@ import (
 	"github.com/jotar910/htmx-templ/internal/services"
 	"github.com/jotar910/htmx-templ/views/components"
 	components_articleslist "github.com/jotar910/htmx-templ/views/components/articles-list"
+	components_highlights "github.com/jotar910/htmx-templ/views/components/highlights"
 	components_mostseen "github.com/jotar910/htmx-templ/views/components/most-seen"
 )
 
@@ -28,7 +29,12 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 		list := ph.postsService.GetList(filters)
 		articlesList := components_articleslist.ArticlesContainer(list, filters)
 		mostSeen := components_mostseen.MostSeenContainer(list.Items)
-		homepage := components.Homepage(mostSeen, articlesList)
+		highlights := components_highlights.HighlightsContainer(
+			&list.Items[0],
+			&list.Items[1],
+			&list.Items[2],
+		)
+		homepage := components.Homepage(highlights, mostSeen, articlesList)
 		component := components.Index(homepage)
 		c.HTML(http.StatusOK, "", component)
 	})

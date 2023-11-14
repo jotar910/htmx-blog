@@ -27,7 +27,7 @@ templ article(index int, article *models.ArticleItem) {
 	<a class="flex items-center gap-4 hover:opacity-75" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
 		<span class="min-w-[1rem] text-sm text-center shrink-0">{ strconv.Itoa(index + 1) }.</span>
 		<div class="grid items-center shrink-0 overflow-hidden h-14 w-14 rounded-lg">
-			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-w-full min-h-full"/>
+			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-w-full min-h-full" loading="lazy"/>
 		</div>
 		<div class="grid self-start">
 			<span class="font-bold truncate" title={ article.Title }>{ article.Title }</span>

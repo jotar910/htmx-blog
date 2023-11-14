@@ -44,7 +44,7 @@ templ list(items []models.ArticleItem) {
 templ article(article *models.ArticleItem) {
 	<article class="grid max-h-[64rem] bg-base-100 dark:bg-base-300 shadow-lg rounded-lg hover:shadow-xl">
 		<a class="grid items-center overflow-hidden h-48 rounded-t-lg" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
-			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-h-full"/>
+			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-h-full" loading="lazy"/>
 		</a>
 		<div class="grid overflow-hidden p-5">
 			<a class="block truncate text-lg mb-4" title={ article.Title } href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>{ article.Title }</a>

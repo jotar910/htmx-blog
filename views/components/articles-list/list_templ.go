@@ -252,7 +252,7 @@ func article(article *models.ArticleItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-h-full\"></a><div class=\"grid overflow-hidden p-5\"><a class=\"block truncate text-lg mb-4\" title=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-h-full\" loading=\"lazy\"></a><div class=\"grid overflow-hidden p-5\"><a class=\"block truncate text-lg mb-4\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

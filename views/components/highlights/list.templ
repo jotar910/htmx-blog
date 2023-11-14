@@ -1,0 +1,63 @@
+package components_highlights
+
+import "github.com/jotar910/htmx-templ/internal/models"
+import "fmt"
+import "github.com/gomarkdown/markdown"
+import "github.com/microcosm-cc/bluemonday"
+
+templ HighlightsContainer(first, second, third *models.ArticleItem) {
+	<section class="p-3">
+		@header()
+		@list(first, second, third)
+	</section>
+}
+
+templ header() {
+	<span class="block text-xl mb-8 lg:mb-16">Highlights</span>
+}
+
+templ list(first, second, third *models.ArticleItem) {
+	<section class="grid md:grid-cols-2 lg:grid-cols-[3fr_2fr] max-w-5xl gap-8 mx-auto">
+		@article(first, true)
+		@article(second, false)
+		@article(third, false)
+	</section>
+}
+
+templ article(article *models.ArticleItem, isMain bool) {
+	<article
+ 		class={ 
+            templ.SafeClass("grid grid-rows-[auto_1fr] max-h-[64rem] bg-base-100 dark:bg-base-300 shadow-lg rounded-lg hover:shadow-xl"),
+            templ.KV(templ.SafeClass("md:row-start-1 md:row-end-3"), isMain),
+        }
+	>
+		<a class="grid items-center overflow-hidden h-48 rounded-t-lg" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
+			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-h-full" loading="lazy"/>
+		</a>
+		<div class="flex flex-col overflow-hidden p-5">
+			<a class="block truncate text-lg md:text-xl mb-4" title={ article.Title } href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>{ article.Title }</a>
+			<div
+ 				class={ 
+                     "special-scroll flex-grow overflow-auto mb-4 prose",
+                     templ.KV(templ.SafeClass("md:hidden"), !isMain),
+                 }
+			>
+				{! rawHTML(mdToHTML(article.Summary)) }
+			</div>
+			<div class="mt-auto">{ article.Date.Format("Jan 02, 2006") }</div>
+		</div>
+	</article>
+}
+
+func rawHTML(html string) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		_, err := io.WriteString(w, html)
+		return err
+	})
+}
+
+func mdToHTML(md string) string {
+	maybeUnsafeHTML := markdown.ToHTML([]byte(md), nil, nil)
+	html := bluemonday.UGCPolicy().SanitizeBytes(maybeUnsafeHTML)
+	return string(html)
+}
