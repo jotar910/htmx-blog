@@ -2,6 +2,7 @@
 module.exports = {
     content: [
         './views/**/*.{templ,html,ts}',
+        './src/components/**/*.{html,ts}',
         './node_modules/tw-elements/dist/js/**/*.js',
     ],
     plugins: [
@@ -10,7 +11,14 @@ module.exports = {
     ],
     darkMode: "class",
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                'base-100': '#F6F8FF',
+                'base-200': '#fefdfd',
+                'base-300': '#ffffff',
+            },
+
+        },
     }
 }
 

@@ -1,0 +1,35 @@
+package components_recentlist
+
+import "github.com/jotar910/htmx-templ/internal/models"
+import "fmt"
+
+templ RecentListContainer(articles []models.ArticleItem) {
+	<section class="p-3">
+		@header()
+		@list(articles)
+	</section>
+}
+
+templ header() {
+	<span class="block text-xl mb-8">Recent</span>
+}
+
+templ list(items []models.ArticleItem) {
+	<app-netflix-horizontal-list>
+		<div class="scrollbar-hide grid grid-flow-col auto-cols-[16rem] gap-12 overflow-auto snap-x snap-mandatory" slot="list">
+			for _, item := range items {
+				@article(&item)
+			}
+		</div>
+	</app-netflix-horizontal-list>
+}
+
+templ article(article *models.ArticleItem) {
+	<a class="flex flex-col overflow-hidden hover:opacity-75 snap-start" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
+		<div class="grid items-center overflow-hidden h-32 mb-3 rounded-lg">
+			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-w-full min-h-full" loading="lazy"/>
+		</div>
+		<span class="mb-1 font-bold truncate" title={ article.Title }>{ article.Title }</span>
+		<span class="mt-auto text-sm">{ article.Date.Format("Jan 02, 2006") }</span>
+	</a>
+}

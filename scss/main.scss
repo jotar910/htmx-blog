@@ -2,7 +2,19 @@
 @tailwind components; /* This injects any component classes you've defined in your Tailwind config or any Tailwind component plugins you're using. */
 @tailwind utilities;  /* This injects all of Tailwind's utility classes, which is the core of what Tailwind provides. */
 
+
 @layer base {
+    @import './horizontal-list.scss';
+
+    .scrollbar-hide {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
     .special-scroll {
       margin-right: -12px;
       padding-right: 12px;

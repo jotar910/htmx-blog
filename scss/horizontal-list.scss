@@ -1,0 +1,43 @@
+.horizontal-list {
+    display: flex;
+    position: relative;
+
+    .scroll-button {
+        align-items: center;
+        animation: fadeout linear forwards;
+        cursor: pointer;
+        justify-content: center;
+        position: absolute;
+        top: 50%;
+    }
+    
+    &:hover {
+        .scroll-button:not(.hidden) {
+            animation: fadein .2s linear forwards;
+            display: flex;
+        }
+    }
+}
+
+@keyframes fadein {
+    from {
+        display: none;
+        opacity: 0;
+    }
+    to {
+        display: flex;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        display: flex;
+        opacity: 1;
+    }
+    to {
+        display: none;
+        opacity: 0;
+    }
+}
+

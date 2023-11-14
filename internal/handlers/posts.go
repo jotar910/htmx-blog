@@ -11,6 +11,7 @@ import (
 	components_articleslist "github.com/jotar910/htmx-templ/views/components/articles-list"
 	components_highlights "github.com/jotar910/htmx-templ/views/components/highlights"
 	components_mostseen "github.com/jotar910/htmx-templ/views/components/most-seen"
+	components_recentlist "github.com/jotar910/htmx-templ/views/components/recent-list"
 )
 
 type PostsHandler struct {
@@ -34,7 +35,8 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 			&list.Items[1],
 			&list.Items[2],
 		)
-		homepage := components.Homepage(highlights, mostSeen, articlesList)
+		recentList := components_recentlist.RecentListContainer(list.Items)
+		homepage := components.Homepage(recentList, highlights, mostSeen, articlesList)
 		component := components.Index(homepage)
 		c.HTML(http.StatusOK, "", component)
 	})
