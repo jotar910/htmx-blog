@@ -56,7 +56,7 @@ func ArticlesCarousel(articles []models.ArticleItem) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><div class=\"self-end p-4 mb-2 md:p-6 lg:p-8 text-gray-100\"><span class=\"block truncate mb-1 text-xl font-medium\" title=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><div class=\"self-end overflow-hidden p-4 mb-2 md:p-6 lg:p-8 text-gray-100\"><span class=\"block truncate mb-1 text-xl font-medium\" title=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -17,7 +17,7 @@ templ ArticlesCarousel(articles []models.ArticleItem) {
  						class="absolute left-0 min-w-full min-h-full object-cover -z-10"
  						alt={ item.Image.Name }
 					/>
-					<div class="self-end p-4 mb-2 md:p-6 lg:p-8 text-gray-100">
+					<div class="self-end overflow-hidden p-4 mb-2 md:p-6 lg:p-8 text-gray-100">
 						<span class="block truncate mb-1 text-xl font-medium" title={ item.Title }>{ item.Title }</span>
 						<p class="line-clamp-2 text-sm text-neutral-300">{ item.Summary }</p>
 					</div>

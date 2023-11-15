@@ -7,7 +7,7 @@
 .gallery-list-wrapper {
     display: flex;
     flex-wrap: nowrap;
-    margin: 0 (-20px); // $joes-padding-md: 20px;
+    margin: 0 (-20px); // $padding-md: 20px;
     overflow: hidden;
 
     &::before {
@@ -20,13 +20,13 @@
         color: rgba(0, 0, 0, .5); // Assuming this is defined elsewhere as a CSS variable.
         background-color: rgb(255, 255, 255); // Assuming this is defined elsewhere as a CSS variable.
         border-radius: 50%;
-        box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2) inset, 0 10px 15px 0 rgba(0, 0, 0, 0.19); // $joes-button-shadow-xl;
+        box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2) inset, 0 10px 15px 0 rgba(0, 0, 0, 0.19); // $button-shadow-xl;
         cursor: pointer;
-        height: 50px; // $joes-menu-height;
+        height: 50px; // $menu-height;
         position: absolute;
         top: 52%;
         transform: translateY(-60%);
-        width: 48px; // $joes-size-48-px: 3rem;
+        width: 48px; // $size-48-px: 3rem;
 
         &.right-scroll-button {
             right: 25px;
@@ -45,11 +45,11 @@
 
     .pages-indicator {
         display: none;
-        bottom: 40px; // $joes-padding-xl: 40px;
         cursor: inherit;
-        padding: 4px; // $joes-padding-xxs: 4px;
+        padding: 4px; // $padding-xxs: 4px;
         position: absolute;
-        right: 40px; // $joes-padding-xl: 40px;
+        right: 40px; // $padding-xl: 40px;
+        top: 40px; // $padding-xl: 40px;
 
         .page-indicator {
             transition: opacity .3s linear;
@@ -57,7 +57,7 @@
             border-radius: 2px;
             cursor: pointer;
             height: 10px;
-            margin: 0 4px; // $joes-padding-xxs: 4px;
+            margin: 0 4px; // $padding-xxs: 4px;
             opacity: 0.5;
             width: 10px;
 
@@ -98,7 +98,7 @@
 }
 
 
-@media (min-width: 475px) { // $joes-screen-xs: 475px;
+@media (min-width: 768px) { // $screen-md: 768px;
     .gallery-list-wrapper {
        .pages-indicator {
            display: flex;
