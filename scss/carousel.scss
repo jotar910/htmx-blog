@@ -1,0 +1,141 @@
+.gallery-list {
+    display: block;
+    position: relative;
+}
+
+
+.gallery-list-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 0 (-20px); // $joes-padding-md: 20px;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        margin-left: calc(-1 * var(--horizontal-page) * var(--item-width));
+        transition: margin .3s;
+    }
+
+    .scroll-button {
+        color: rgba(0, 0, 0, .5); // Assuming this is defined elsewhere as a CSS variable.
+        background-color: rgb(255, 255, 255); // Assuming this is defined elsewhere as a CSS variable.
+        border-radius: 50%;
+        box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2) inset, 0 10px 15px 0 rgba(0, 0, 0, 0.19); // $joes-button-shadow-xl;
+        cursor: pointer;
+        height: 50px; // $joes-menu-height;
+        position: absolute;
+        top: 52%;
+        transform: translateY(-60%);
+        width: 48px; // $joes-size-48-px: 3rem;
+
+        &.right-scroll-button {
+            right: 25px;
+        }
+
+        &.left-scroll-button {
+            left: 25px;
+        }
+    }
+
+    .scroll-arrow {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .pages-indicator {
+        display: none;
+        bottom: 40px; // $joes-padding-xl: 40px;
+        cursor: inherit;
+        padding: 4px; // $joes-padding-xxs: 4px;
+        position: absolute;
+        right: 40px; // $joes-padding-xl: 40px;
+
+        .page-indicator {
+            transition: opacity .3s linear;
+            background-color: rgb(255, 255, 255); // Assuming this is defined elsewhere as a CSS variable.
+            border-radius: 2px;
+            cursor: pointer;
+            height: 10px;
+            margin: 0 4px; // $joes-padding-xxs: 4px;
+            opacity: 0.5;
+            width: 10px;
+
+            &.active {
+                opacity: 1;
+            }
+        }
+    }
+
+    .scroll-button {
+        animation: opacity-hide forwards linear 2s;
+        animation-delay: -2s;
+    }
+
+    &.hide-animation:not(:hover) {
+        .scroll-button {
+            animation: opacity-hide forwards linear 2s;
+        }
+    }
+
+    &:hover {
+        .scroll-button {
+            animation: opacity-show forwards linear .2s;
+        }
+    }
+}
+
+.gallery-list-item {
+    flex-shrink: 0;
+    min-height: 100%;
+    width: var(--item-width);
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px, 0 -180px 100px -120px inset rgba(0,0,0,0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+
+@media (min-width: 475px) { // $joes-screen-xs: 475px;
+    .gallery-list-wrapper {
+       .pages-indicator {
+           display: flex;
+           animation: opacity-hide forwards linear 2s;
+           animation-delay: -2s;
+       }
+    
+       &.hide-animation:not(:hover) {
+           .pages-indicator {
+               animation: opacity-hide forwards linear 2s;
+           }
+       }
+    
+       &:hover {
+           .pages-indicator {
+               animation: opacity-show forwards linear .2s;
+           }
+       }
+    }
+}
+
+@keyframes opacity-show {
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes opacity-hide {
+    0% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 1;
+    }
+    100% {
+        display: none;
+        opacity: 0;
+    }
+}
+

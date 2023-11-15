@@ -5,6 +5,7 @@
 
 @layer base {
     @import './horizontal-list.scss';
+    @import './carousel.scss';
 
     .scrollbar-hide {
         -ms-overflow-style: none;  /* IE and Edge */

@@ -18,11 +18,11 @@ class NetflixHorizontalListComponent extends HTMLElement {
         <template id="content">
             <div class="horizontal-list flex items-center relative">
                 <div class="scroll-button z-10 w-12 h-12 left-0 translate-x-[-50%] translate-y-[-60%] bg-base-300 border border-primary-100 shadow-xl rounded-full text-gray-700 dark:text-gray-200 previous">
-                    <span class="scroll-arrow"><</span>
+                    <img src="assets/icons/left-arrow.svg" alt="left" class="scroll-arrow" />
                 </div>
                 <slot name="list"></slot>
                 <div class="scroll-button z-10 w-12 h-12 right-0 translate-x-[50%] translate-y-[-60%] bg-base-300 border border-primary-100 shadow-xl rounded-full text-gray-700 dark:text-gray-200 next">
-                    <span class="scroll-arrow">></span>
+                     <img src="assets/icons/right-arrow.svg" alt="right" class="scroll-arrow" />
                 </div>
             </div>
         </template>`;

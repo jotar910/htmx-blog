@@ -8,6 +8,7 @@ import (
 	"github.com/jotar910/htmx-templ/internal/models"
 	"github.com/jotar910/htmx-templ/internal/services"
 	"github.com/jotar910/htmx-templ/views/components"
+	components_articlescarousel "github.com/jotar910/htmx-templ/views/components/articles-carousel"
 	components_articleslist "github.com/jotar910/htmx-templ/views/components/articles-list"
 	components_highlights "github.com/jotar910/htmx-templ/views/components/highlights"
 	components_mostseen "github.com/jotar910/htmx-templ/views/components/most-seen"
@@ -36,7 +37,14 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 			&list.Items[2],
 		)
 		recentList := components_recentlist.RecentListContainer(list.Items)
-		homepage := components.Homepage(recentList, highlights, mostSeen, articlesList)
+		articlesCarousel := components_articlescarousel.ArticlesCarousel(list.Items)
+		homepage := components.Homepage(
+			articlesCarousel,
+			recentList,
+			highlights,
+			mostSeen,
+			articlesList,
+		)
 		component := components.Index(homepage)
 		c.HTML(http.StatusOK, "", component)
 	})

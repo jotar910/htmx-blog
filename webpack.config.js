@@ -64,7 +64,7 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.scss|\.html|\.templ$/,
+                test: /\.css|\.scss|\.html|\.templ$/,
                 use: [
                     MiniCssExtractPlugin.loader, // 3. Extract CSS into files
                     'css-loader',                // 2. Turn CSS into CommonJS

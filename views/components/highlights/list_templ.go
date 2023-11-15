@@ -97,7 +97,7 @@ func list(first, second, third *models.ArticleItem) templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"grid md:grid-cols-2 lg:grid-cols-[3fr_2fr] max-w-5xl gap-8 mx-auto\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"grid md:grid-cols-2 lg:grid-cols-[3fr_2fr] gap-8 mx-auto\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
