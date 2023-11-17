@@ -4,7 +4,7 @@ import "github.com/jotar910/htmx-templ/internal/models"
 import "fmt"
 
 templ ArticlesCarousel(articles []models.ArticleItem) {
-	<section class="p-3">
+	<section class="p-3 overflow-hidden">
 		<app-carousel class="gallery-list">
 			for _, item := range articles {
 				<a

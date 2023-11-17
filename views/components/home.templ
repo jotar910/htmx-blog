@@ -1,6 +1,7 @@
 package components
 
 templ Homepage(articlesCarousel, recentList, highlights, mostSeen, articlesList templ.Component) {
+	@NavbarContainer()
 	<div class="container mx-auto">
 		{! articlesCarousel }
 		<hr
@@ -20,4 +21,5 @@ templ Homepage(articlesCarousel, recentList, highlights, mostSeen, articlesList 
 		/>
 		{! articlesList }
 	</div>
+	@FooterContainer()
 }
