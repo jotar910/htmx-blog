@@ -1,25 +1,49 @@
 package components
 
+css divider() {
+	background-image: url('assets/images/bg-line-transparent.png');
+	background-repeat: repeat;
+	height: 1px;
+}
+
 templ Homepage(articlesCarousel, recentList, highlights, mostSeen, articlesList templ.Component) {
 	@NavbarContainer()
-	<div class="container mx-auto">
-		{! articlesCarousel }
-		<hr
- 			class="my-20 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50"
-		/>
-		{! recentList }
-		<hr
- 			class="my-20 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50"
-		/>
-		{! highlights }
-		<hr
- 			class="my-20 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50"
-		/>
-		{! mostSeen }
-		<hr
- 			class="my-20 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50"
-		/>
-		{! articlesList }
-	</div>
+	<section class="relative py-20">
+		<div class="container mx-auto">
+			{! articlesCarousel }
+		</div>
+	</section>
+	<hr
+ 		class={ divider(), "border-t-0 bg-primary opacity-100 dark:opacity-50" }
+	/>
+	<section class="relative py-20">
+		<div class="container mx-auto">
+			{! recentList }
+		</div>
+	</section>
+	<hr
+ 		class={ divider(), "border-t-0 bg-primary opacity-100 dark:opacity-50" }
+	/>
+	<section class="relative py-20 bg-primary-50">
+		<div class="container mx-auto">
+			{! highlights }
+		</div>
+	</section>
+	<hr
+ 		class={ divider(), "border-t-0 bg-primary opacity-100 dark:opacity-50" }
+	/>
+	<section class="relative py-20">
+		<div class="container mx-auto">
+			{! mostSeen }
+		</div>
+	</section>
+	<hr
+ 		class={ divider(), "border-t-0 bg-primary opacity-100 dark:opacity-50" }
+	/>
+	<section class="relative py-20 bg-primary-50">
+		<div class="container mx-auto">
+			{! articlesList }
+		</div>
+	</section>
 	@FooterContainer()
 }

@@ -23,7 +23,7 @@ func FooterContainer() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<footer class=\"footer-container w-full mt-6\"><div class=\"container flex justify-between items-center gap-12 py-8 px-3 mx-auto\"><div class=\"text-xs md:text-[1rem] text-white\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<footer class=\"footer-container w-full bg-primary\"><div class=\"container flex justify-between items-center gap-12 py-8 px-3 mx-auto\"><div class=\"text-xs md:text-[1rem] text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -19,18 +19,30 @@ templ ArticlesItemsResponse(items []models.ArticleItem) {
 	}
 }
 
-templ ArticlesCountResponse(total int) {
-	<span id="articles-counter" hx-swap-oob="#articles-counter" hx-swap="outerHTML">{ strconv.Itoa(total) }</span>
+templ ArticlesCountResponse(total int, term string) {
+	<span id="articles-counter" hx-swap-oob="#articles-counter" hx-swap="innerHTML">
+		@headerCounter(total, term)
+	</span>
 }
 
 templ header(total int, term string) {
 	<header class="grid sm:grid-cols-[1fr_auto] mb-3">
 		<div class="grid">
-			<span class="text-xl">Articles</span>
-			<span class="text-gray-700 dark:text-gray-200">Number of results: <span id="articles-counter">({ strconv.Itoa(total) })</span></span>
+			<span class="text-2xl" id="articles">Articles</span>
+			<span class="text-gray-700 dark:text-gray-200" id="articles-counter">
+				@headerCounter(total, term)
+			</span>
 		</div>
 		@searchInput(term)
 	</header>
+}
+
+templ headerCounter(total int, term string) {
+	if term == "" {
+		All results (<span class="font-bold">{ strconv.Itoa(total) }</span>)
+	} else {
+		<span class="font-bold">{ strconv.Itoa(total) }</span> results for <span class="font-bold">{ term }</span>
+	}
 }
 
 templ list(items []models.ArticleItem) {

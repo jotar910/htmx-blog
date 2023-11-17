@@ -55,15 +55,15 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 		list := ph.postsService.GetList(filters)
 
 		if filters.Empty() {
-			c.Header("HX-Push-Url", "./")
+			c.Header("HX-Push-Url", "./#articles")
 		} else {
-			c.Header("HX-Push-Url", "./?"+filters.Encode())
+			c.Header("HX-Push-Url", "./?"+filters.Encode()+"#articles")
 		}
 
 		componentList := components_articleslist.ArticlesItemsResponse(list.Items)
 		c.HTML(http.StatusOK, "", componentList)
 
-		componentCounter := components_articleslist.ArticlesCountResponse(list.Total)
+		componentCounter := components_articleslist.ArticlesCountResponse(list.Total, filters.Term)
 		c.HTML(http.StatusOK, "", componentCounter)
 	})
 }

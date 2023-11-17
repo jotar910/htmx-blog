@@ -23,7 +23,7 @@ func NavbarContainer() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav class=\"relative flex w-full flex-wrap items-center justify-between bg-neutral-100 py-2 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-neutral-600 lg:py-4\"><div class=\"flex w-full flex-wrap items-center justify-between px-3\"><div><a class=\"mx-2 my-1 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0\" href=\"/\"><img src=\"assets/images/logo-t.png\" class=\"h-8\" alt=\"bizzer Logo\" loading=\"lazy\"> <img src=\"assets/images/logo-caption.png\" class=\"h-6 ml-0.5 mt-2\" alt=\"Caption\" loading=\"lazy\"></a></div></div></nav>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav class=\"relative flex w-full flex-wrap items-center justify-between bg-primary py-2 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-neutral-600 lg:py-4\"><div class=\"container flex w-full flex-wrap items-center justify-between px-3 mx-auto\"><div><a class=\"mx-2 my-1 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0\" href=\"/\"><img src=\"assets/images/logo-t.png\" class=\"h-8\" alt=\"bizzer Logo\" loading=\"lazy\"> <img src=\"assets/images/logo-caption.png\" class=\"h-6 ml-0.5 mt-2 invert\" alt=\"Caption\" loading=\"lazy\"></a></div></div></nav>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
