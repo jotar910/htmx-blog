@@ -1,0 +1,9 @@
+package components_netflixlist
+
+templ NetflixList() {
+	<app-netflix-horizontal-list>
+		<div class="scrollbar-hide grid grid-flow-col gap-12 overflow-auto snap-x snap-mandatory" slot="list">
+			{ children... }
+		</div>
+	</app-netflix-horizontal-list>
+}

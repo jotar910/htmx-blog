@@ -1,0 +1,105 @@
+package components
+
+import "os"
+import "log"
+import "github.com/yuin/goldmark"
+import "github.com/yuin/goldmark/renderer/html"
+import "github.com/jotar910/htmx-templ/internal/models"
+
+type ArticleOption struct {
+	Area      string
+	Component templ.Component
+}
+
+func filter[T any](values []T, by func(v T) bool) []T {
+	var res = make([]T, 0)
+	for _, v := range values {
+		if by(v) {
+			res = append(res, v)
+		}
+	}
+	return res
+}
+
+func byArea(area string) func(o ArticleOption) bool {
+	return func(o ArticleOption) bool { return o.Area == area }
+}
+
+templ Article(article *models.Article, options ...ArticleOption) {
+	@NavbarContainer()
+	<header class="flex flex-col gap-10 mt-10 empty:hidden">
+		for _, option := range filter(options, byArea("header")) {
+			<div class="container mx-auto">
+				{! option.Component }
+			</div>
+		}
+	</header>
+	<div class="relative flex gap-10 py-10 container-grid">
+		<main class="flex container mx-auto">
+			@articleContainer(article)
+			@asideContainer(filter(options, byArea("aside")))
+		</main>
+	</div>
+	<footer class="flex flex-col gap-10 mb-10 empty:hidden">
+		for _, option := range filter(options, byArea("footer")) {
+			<section class="container mx-auto">
+				{! option.Component }
+			</section>
+		}
+	</footer>
+	@FooterContainer()
+}
+
+templ articleContainer(article *models.Article) {
+	<section>
+		<h1 class="mb-10 text-3xl font-bold">{ article.Title }</h1>
+		<div class="prose max-w-none">
+			{! rawHTML(mdToHTML(readArticle(article.Filename))) }
+		</div>
+	</section>
+}
+
+templ asideContainer(options []ArticleOption) {
+	<hr class="hidden lg:block h-full min-h-[1em] w-px mx-6 self-stretch bg-gradient-to-tr from-transparent via-neutral-500 to-transparent opacity-20 dark:opacity-100"/>
+	if len(options) > 0 {
+		<aside class="hidden lg:flex flex-col gap-10">
+			for _, option := range options {
+				<article>
+					{! option.Component }
+				</article>
+			}
+		</aside>
+	}
+}
+
+func readArticle(filename string) string {
+	f, err := os.ReadFile("public/articles/" + filename)
+	if err != nil {
+		log.Printf("reading article file: %s", filename)
+		return ""
+	}
+	return string(f)
+}
+
+func rawHTML(html string) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		_, err := io.WriteString(w, html)
+		return err
+	})
+}
+
+func mdToHTML(source string) string {
+	md := goldmark.New(
+		goldmark.WithRendererOptions(
+			html.WithXHTML(),
+			html.WithUnsafe(),
+		),
+	)
+
+	var buf bytes.Buffer
+	err := md.Convert([]byte(source), &buf)
+	if err != nil {
+		return err.Error()
+	}
+	return buf.String()
+}

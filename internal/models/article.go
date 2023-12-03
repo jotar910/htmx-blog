@@ -40,3 +40,10 @@ func (lf *ArticleListFilters) Decode(c *gin.Context) *ArticleListFilters {
 	lf.Term = c.Query("searchTerm")
 	return lf
 }
+
+type Article struct {
+	ID       int64
+	Title    string
+	Date     time.Time
+	Filename string
+}

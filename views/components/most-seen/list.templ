@@ -3,29 +3,50 @@ package components_mostseen
 import "github.com/jotar910/htmx-templ/internal/models"
 import "fmt"
 import "strconv"
+import "github.com/jotar910/htmx-templ/views/components/netflix-list"
 
 templ MostSeenContainer(articles []models.ArticleItem) {
 	<section class="p-3">
-		@header()
+		<span class="block text-2xl mb-10">Most seen</span>
 		@list(articles)
 	</section>
 }
 
-templ header() {
-	<span class="block text-2xl mb-10">Most seen</span>
+templ RelatedHorizontalContainer(items []models.ArticleItem) {
+	<section class="p-3">
+		<span class="block text-2xl mb-10">Related content</span>
+		@components_netflixlist.NetflixList() {
+			for i, item := range items {
+				@article(i, &item, false)
+			}
+		}
+	</section>
+}
+
+templ RelatedVerticalContainer(items []models.ArticleItem) {
+	<section class="p-3">
+		<span class="block text-2xl mb-10">Related content</span>
+		<div class="grid gap-6 xl:w-[375px]">
+			for i, item := range items {
+				@article(i, &item, false)
+			}
+		</div>
+	</section>
 }
 
 templ list(items []models.ArticleItem) {
 	<section class="grid grid-cols-[repeat(auto-fill,minmax(275px,1fr))] gap-y-8 gap-x-10">
 		for i, item := range items {
-			@article(i, &item)
+			@article(i, &item, true)
 		}
 	</section>
 }
 
-templ article(index int, article *models.ArticleItem) {
-	<a class="flex items-center gap-4 hover:opacity-75" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
-		<span class="min-w-[1rem] text-sm text-center shrink-0">{ strconv.Itoa(index + 1) }.</span>
+templ article(index int, article *models.ArticleItem, showPlace bool) {
+	<a class="flex items-center w-full min-w-[275px] gap-4 hover:opacity-75" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
+		if showPlace {
+			<span class="min-w-[1rem] text-sm text-center shrink-0">{ strconv.Itoa(index + 1) }.</span>
+		}
 		<div class="grid items-center shrink-0 overflow-hidden h-14 w-14 rounded-lg">
 			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-w-full min-h-full" loading="lazy"/>
 		</div>

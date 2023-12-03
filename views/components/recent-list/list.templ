@@ -2,11 +2,14 @@ package components_recentlist
 
 import "github.com/jotar910/htmx-templ/internal/models"
 import "fmt"
+import "github.com/jotar910/htmx-templ/views/components/netflix-list"
 
-templ RecentListContainer(articles []models.ArticleItem) {
+templ RecentListContainer(items []models.ArticleItem) {
 	<section class="p-3">
 		@header()
-		@list(articles)
+		@components_netflixlist.NetflixList() {
+			@articles(items)
+		}
 	</section>
 }
 
@@ -14,18 +17,14 @@ templ header() {
 	<span class="block text-2xl mb-10">Latest Articles</span>
 }
 
-templ list(items []models.ArticleItem) {
-	<app-netflix-horizontal-list>
-		<div class="scrollbar-hide grid grid-flow-col auto-cols-[16rem] gap-12 overflow-auto snap-x snap-mandatory" slot="list">
-			for _, item := range items {
-				@article(&item)
-			}
-		</div>
-	</app-netflix-horizontal-list>
+templ articles(items []models.ArticleItem) {
+	for _, item := range items {
+		@article(&item)
+	}
 }
 
 templ article(article *models.ArticleItem) {
-	<a class="flex flex-col overflow-hidden hover:opacity-75 snap-start" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
+	<a class="flex flex-col overflow-hidden w-[16rem] hover:opacity-75 snap-start" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
 		<div class="grid items-center overflow-hidden h-32 mb-3 rounded-lg">
 			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-w-full min-h-full" loading="lazy"/>
 		</div>

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/jotar910/htmx-templ/internal/services"
 	"github.com/jotar910/htmx-templ/views/components"
 	components_articlescarousel "github.com/jotar910/htmx-templ/views/components/articles-carousel"
+	components_articleslinks "github.com/jotar910/htmx-templ/views/components/articles-links"
 	components_articleslist "github.com/jotar910/htmx-templ/views/components/articles-list"
 	components_highlights "github.com/jotar910/htmx-templ/views/components/highlights"
 	components_mostseen "github.com/jotar910/htmx-templ/views/components/most-seen"
@@ -65,5 +67,29 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 
 		componentCounter := components_articleslist.ArticlesCountResponse(list.Total, filters.Term)
 		c.HTML(http.StatusOK, "", componentCounter)
+	})
+
+	r.GET("/:id", func(c *gin.Context) {
+		arg := &models.Article{
+			ID:       1,
+			Title:    "Testing this",
+			Date:     time.Now(),
+			Filename: "markdown.md",
+		}
+		filters := new(models.ArticleListFilters).Decode(c)
+		list := ph.postsService.GetList(filters)
+		article := components.Article(
+			arg,
+			components.ArticleOption{
+				Component: components_articleslinks.ArticlesLinksList(list.Items[:3]),
+				Area:      "header",
+			},
+			components.ArticleOption{
+				Component: components_mostseen.RelatedVerticalContainer(list.Items),
+				Area:      "aside",
+			},
+		)
+		component := components.Index(article)
+		c.HTML(http.StatusOK, "", component)
 	})
 }

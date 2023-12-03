@@ -8,6 +8,7 @@ module.exports = {
     plugins: [
         require('@tailwindcss/typography'),
         require("tw-elements/dist/plugin.cjs"),
+        require('@savvywombat/tailwindcss-grid-areas'),
     ],
     darkMode: "class",
     theme: {
