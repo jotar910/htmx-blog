@@ -11,7 +11,7 @@ templ HighlightsContainer(first, second, third *models.ArticleItem) {
 }
 
 templ highlightsHeader() {
-	<span class="block text-2xl mb-10 lg:mb-16">Highlights</span>
+	<span class="block text-2xl mb-10 lg:mb-16 font-heading">Highlights</span>
 }
 
 templ highlightsList(first, second, third *models.ArticleItem) {
@@ -33,10 +33,10 @@ templ highlightsListItem(article *models.ArticleItem, isMain bool) {
 			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-h-full" loading="lazy"/>
 		</a>
 		<div class="flex flex-col overflow-hidden p-5">
-			<a class="block truncate text-lg md:text-xl mb-4" title={ article.Title } href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>{ article.Title }</a>
+			<a class="block truncate text-lg md:text-xl mb-4 font-heading" title={ article.Title } href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>{ article.Title }</a>
 			<div
  				class={ 
-                     "special-scroll flex-grow overflow-auto mb-4 prose",
+                     "special-scroll flex-grow overflow-auto mb-4 prose prose-headings:font-heading",
                      templ.KV(templ.SafeClass("md:hidden"), !isMain),
                  }
 			>

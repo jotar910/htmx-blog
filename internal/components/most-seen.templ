@@ -6,7 +6,7 @@ import "strconv"
 
 templ MostSeenContainer(articles []models.ArticleItem) {
 	<section class="p-3">
-		<span class="block text-2xl mb-10">Most seen</span>
+		<span class="block text-2xl mb-10 font-heading">Most seen</span>
 		@mostSeenList(articles)
 	</section>
 }
@@ -26,7 +26,7 @@ templ mostSeenListItem(index int, article *models.ArticleItem) {
 			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-w-full min-h-full" loading="lazy"/>
 		</div>
 		<div class="grid self-start">
-			<span class="font-bold truncate" title={ article.Title }>{ article.Title }</span>
+			<span class="font-heading truncate" title={ article.Title }>{ article.Title }</span>
 			<span class="text-sm">{ article.Date.Format("Jan 02, 2006") }</span>
 		</div>
 	</a>

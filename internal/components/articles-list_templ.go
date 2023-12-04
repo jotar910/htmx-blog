@@ -121,7 +121,7 @@ func articlesListHeader(total int, term string) templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"grid sm:grid-cols-[1fr_auto] mb-3\"><div class=\"grid\"><span class=\"text-2xl\" id=\"articles\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"grid sm:grid-cols-[1fr_auto] mb-3\"><div class=\"grid\"><span class=\"text-2xl font-heading\" id=\"articles\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -130,7 +130,7 @@ func articlesListHeader(total int, term string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span> <span class=\"text-gray-700 dark:text-gray-200\" id=\"articles-counter\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span> <span class=\"text-gray-700 dark:text-gray-200 font-heading\" id=\"articles-counter\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -306,7 +306,7 @@ func articleListItem(article *models.ArticleItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-h-full\" loading=\"lazy\"></a><div class=\"grid overflow-hidden p-5\"><a class=\"block truncate text-lg mb-4\" title=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-h-full\" loading=\"lazy\"></a><div class=\"grid overflow-hidden p-5\"><a class=\"block truncate text-lg mb-4 font-heading\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -332,7 +332,7 @@ func articleListItem(article *models.ArticleItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a><div class=\"special-scroll overflow-auto mb-4 prose\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a><div class=\"special-scroll overflow-auto mb-4 prose prose-headings:font-heading font-body\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -62,7 +62,7 @@ func highlightsHeader() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span class=\"block text-2xl mb-10 lg:mb-16\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span class=\"block text-2xl mb-10 lg:mb-16 font-heading\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -176,7 +176,7 @@ func highlightsListItem(article *models.ArticleItem, isMain bool) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-h-full\" loading=\"lazy\"></a><div class=\"flex flex-col overflow-hidden p-5\"><a class=\"block truncate text-lg md:text-xl mb-4\" title=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-h-full\" loading=\"lazy\"></a><div class=\"flex flex-col overflow-hidden p-5\"><a class=\"block truncate text-lg md:text-xl mb-4 font-heading\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -207,7 +207,7 @@ func highlightsListItem(article *models.ArticleItem, isMain bool) templ.Componen
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 = []any{
-			"special-scroll flex-grow overflow-auto mb-4 prose",
+			"special-scroll flex-grow overflow-auto mb-4 prose prose-headings:font-heading",
 			templ.KV(templ.SafeClass("md:hidden"), !isMain),
 		}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var10...)

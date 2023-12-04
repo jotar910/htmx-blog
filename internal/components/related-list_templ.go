@@ -85,7 +85,7 @@ func RelatedVerticalContainer(items []models.ArticleItem) templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"p-3\"><span class=\"block text-2xl mb-10\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"p-3\"><span class=\"block text-2xl mb-10 font-heading\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -153,7 +153,7 @@ func relatedListItem(article *models.ArticleItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-w-full min-h-full\" loading=\"lazy\"></div><div class=\"grid self-start\"><span class=\"font-bold truncate\" title=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-w-full min-h-full\" loading=\"lazy\"></div><div class=\"grid self-start\"><span class=\"truncate font-heading\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

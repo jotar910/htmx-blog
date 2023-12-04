@@ -17,7 +17,7 @@ templ RelatedHorizontalContainer(items []models.ArticleItem) {
 
 templ RelatedVerticalContainer(items []models.ArticleItem) {
 	<section class="p-3">
-		<span class="block text-2xl mb-10">Related content</span>
+		<span class="block text-2xl mb-10 font-heading">Related content</span>
 		<div class="grid gap-6 xl:w-[375px]">
 			for _, item := range items {
 				@relatedListItem(&item)
@@ -32,7 +32,7 @@ templ relatedListItem(article *models.ArticleItem) {
 			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-w-full min-h-full" loading="lazy"/>
 		</div>
 		<div class="grid self-start">
-			<span class="font-bold truncate" title={ article.Title }>{ article.Title }</span>
+			<span class="truncate font-heading" title={ article.Title }>{ article.Title }</span>
 			<span class="text-sm">{ article.Date.Format("Jan 02, 2006") }</span>
 		</div>
 	</a>

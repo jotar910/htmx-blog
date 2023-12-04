@@ -1,5 +1,4 @@
 @import './fonts.scss';
-@import './tailwind.scss';
 
 @tailwind base;      /* This injects Tailwind's base styles, which include normalize.css and any base styles you configure. */
 @tailwind components; /* This injects any component classes you've defined in your Tailwind config or any Tailwind component plugins you're using. */
@@ -56,5 +55,10 @@
         }
       }
     }
+
+    h1, h2, h3, h4, h5, h6, h7 {
+        @apply text-heading;
+    }
 }
+
 

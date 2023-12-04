@@ -7,7 +7,7 @@ templ ArticlesLinksList(articles []models.ArticleItem) {
 	<div class="flex flex-wrap justify-center max-w-5xl mx-auto">
 		for _, article := range articles {
 			<a class="flex flex-col gap-2 p-6 justify-center text-center w-full xs:max-w-xs" href={ templ.SafeURL(fmt.Sprintf("/%d", article.ID)) }>
-				<span class="font-bold truncate" title={ article.Title }>{ article.Title }</span>
+				<span class="font-heading truncate" title={ article.Title }>{ article.Title }</span>
 				<span class="text-sm">{ article.Date.Format("Jan 02, 2006") }</span>
 			</a>
 		}

@@ -94,8 +94,13 @@ module.exports = {
                 'base-100': '#F6F8FF',
                 'base-200': '#fefdfd',
                 'base-300': '#ffffff',
+                'heading': '#172131',
+                'body': '#374151'
             },
-
+            fontFamily: {
+                'heading': ['Poppins', 'sans-serif'],
+                'body': ['Montserrat', 'sans-serif']
+            }
         },
     }
 }
