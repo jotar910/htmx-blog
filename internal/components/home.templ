@@ -1,13 +1,9 @@
 package components
 
-css divider() {
-	background-image: url('assets/images/bg-line-transparent.png');
-	background-repeat: repeat;
-	height: 1px;
-}
+import "github.com/jotar910/htmx-templ/internal/components/core"
 
 templ Homepage(articlesCarousel, recentList, highlights, mostSeen, articlesList templ.Component) {
-	@NavbarContainer()
+	@components_core.NavbarContainer()
 	<section class="relative py-20">
 		<div class="container mx-auto">
 			{! articlesCarousel }
@@ -45,5 +41,5 @@ templ Homepage(articlesCarousel, recentList, highlights, mostSeen, articlesList 
 			{! articlesList }
 		</div>
 	</section>
-	@FooterContainer()
+	@components_core.FooterContainer()
 }

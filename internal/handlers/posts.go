@@ -7,12 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/jotar910/htmx-templ/internal/components"
-	components_articlescarousel "github.com/jotar910/htmx-templ/internal/components/articles-carousel"
-	components_articleslinks "github.com/jotar910/htmx-templ/internal/components/articles-links"
-	components_articleslist "github.com/jotar910/htmx-templ/internal/components/articles-list"
-	components_highlights "github.com/jotar910/htmx-templ/internal/components/highlights"
-	components_mostseen "github.com/jotar910/htmx-templ/internal/components/most-seen"
-	components_recentlist "github.com/jotar910/htmx-templ/internal/components/recent-list"
+	components_core "github.com/jotar910/htmx-templ/internal/components/core"
 	"github.com/jotar910/htmx-templ/internal/models"
 	"github.com/jotar910/htmx-templ/internal/services"
 )
@@ -31,15 +26,15 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 	r.GET("/", func(c *gin.Context) {
 		filters := new(models.ArticleListFilters).Decode(c)
 		list := ph.postsService.GetList(filters)
-		articlesList := components_articleslist.ArticlesContainer(list, filters)
-		mostSeen := components_mostseen.MostSeenContainer(list.Items)
-		highlights := components_highlights.HighlightsContainer(
+		articlesList := components.ArticlesListContainer(list, filters)
+		mostSeen := components.MostSeenContainer(list.Items)
+		highlights := components.HighlightsContainer(
 			&list.Items[0],
 			&list.Items[1],
 			&list.Items[2],
 		)
-		recentList := components_recentlist.RecentListContainer(list.Items)
-		articlesCarousel := components_articlescarousel.ArticlesCarousel(list.Items)
+		recentList := components.RecentListContainer(list.Items)
+		articlesCarousel := components.ArticlesCarousel(list.Items)
 		homepage := components.Homepage(
 			articlesCarousel,
 			recentList,
@@ -47,7 +42,7 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 			mostSeen,
 			articlesList,
 		)
-		component := components.Index(homepage)
+		component := components_core.Index(homepage)
 		c.HTML(http.StatusOK, "", component)
 	})
 
@@ -62,10 +57,10 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 			c.Header("HX-Push-Url", "./?"+filters.Encode()+"#articles")
 		}
 
-		componentList := components_articleslist.ArticlesItemsResponse(list.Items)
+		componentList := components.ArticlesListItemsResponse(list.Items)
 		c.HTML(http.StatusOK, "", componentList)
 
-		componentCounter := components_articleslist.ArticlesCountResponse(list.Total, filters.Term)
+		componentCounter := components.ArticlesListCountResponse(list.Total, filters.Term)
 		c.HTML(http.StatusOK, "", componentCounter)
 	})
 
@@ -78,18 +73,18 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 		}
 		filters := new(models.ArticleListFilters).Decode(c)
 		list := ph.postsService.GetList(filters)
-		article := components.Article(
+		article := components.ArticleDetails(
 			arg,
 			components.ArticleOption{
-				Component: components_articleslinks.ArticlesLinksList(list.Items[:3]),
+				Component: components.ArticlesLinksList(list.Items[:3]),
 				Area:      "header",
 			},
 			components.ArticleOption{
-				Component: components_mostseen.RelatedVerticalContainer(list.Items),
+				Component: components.RelatedVerticalContainer(list.Items),
 				Area:      "aside",
 			},
 		)
-		component := components.Index(article)
+		component := components_core.Index(article)
 		c.HTML(http.StatusOK, "", component)
 	})
 }

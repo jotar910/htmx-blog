@@ -1,43 +1,41 @@
-package components_articleslist
+package components
 
 import "github.com/jotar910/htmx-templ/internal/models"
 import "fmt"
 import "strconv"
-import "github.com/gomarkdown/markdown"
-import "github.com/microcosm-cc/bluemonday"
 
-templ ArticlesContainer(articleList *models.ArticleList, filters *models.ArticleListFilters) {
+templ ArticlesListContainer(articleList *models.ArticleList, filters *models.ArticleListFilters) {
 	<section class="p-3">
-		@header(articleList.Total, filters.Term)
-		@list(articleList.Items)
+		@articlesListHeader(articleList.Total, filters.Term)
+		@articlesList(articleList.Items)
 	</section>
 }
 
-templ ArticlesItemsResponse(items []models.ArticleItem) {
+templ ArticlesListItemsResponse(items []models.ArticleItem) {
 	for _, item := range items {
-		@article(&item)
+		@articleListItem(&item)
 	}
 }
 
-templ ArticlesCountResponse(total int, term string) {
+templ ArticlesListCountResponse(total int, term string) {
 	<span id="articles-counter" hx-swap-oob="#articles-counter" hx-swap="innerHTML">
-		@headerCounter(total, term)
+		@articlesListHeaderCounter(total, term)
 	</span>
 }
 
-templ header(total int, term string) {
+templ articlesListHeader(total int, term string) {
 	<header class="grid sm:grid-cols-[1fr_auto] mb-3">
 		<div class="grid">
 			<span class="text-2xl" id="articles">Articles</span>
 			<span class="text-gray-700 dark:text-gray-200" id="articles-counter">
-				@headerCounter(total, term)
+				@articlesListHeaderCounter(total, term)
 			</span>
 		</div>
-		@searchInput(term)
+		@articleListSearchInput(term)
 	</header>
 }
 
-templ headerCounter(total int, term string) {
+templ articlesListHeaderCounter(total int, term string) {
 	if term == "" {
 		All results (<span class="font-bold">{ strconv.Itoa(total) }</span>)
 	} else {
@@ -45,15 +43,15 @@ templ headerCounter(total int, term string) {
 	}
 }
 
-templ list(items []models.ArticleItem) {
+templ articlesList(items []models.ArticleItem) {
 	<app-pinterest-layout class="flex flex-col flex-wrap content-between max-w-full" id="articles-search-results">
 		for _, item := range items {
-			@article(&item)
+			@articleListItem(&item)
 		}
 	</app-pinterest-layout>
 }
 
-templ article(article *models.ArticleItem) {
+templ articleListItem(article *models.ArticleItem) {
 	<article class="grid max-h-[64rem] bg-base-100 dark:bg-base-300 shadow-lg rounded-lg hover:shadow-xl">
 		<a class="grid items-center overflow-hidden h-48 rounded-t-lg" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
 			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-h-full" loading="lazy"/>
@@ -68,7 +66,7 @@ templ article(article *models.ArticleItem) {
 	</article>
 }
 
-templ searchInput(term string) {
+templ articleListSearchInput(term string) {
 	<div class="relative mb-4 flex flex-row-reverse flex-wrap items-stretch min-w-[16rem] w-full">
 		<input
  			type="search"
@@ -88,17 +86,4 @@ templ searchInput(term string) {
  			class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
 		>Search</label>
 	</div>
-}
-
-func rawHTML(html string) templ.Component {
-	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		_, err := io.WriteString(w, html)
-		return err
-	})
-}
-
-func mdToHTML(md string) string {
-	maybeUnsafeHTML := markdown.ToHTML([]byte(md), nil, nil)
-	html := bluemonday.UGCPolicy().SanitizeBytes(maybeUnsafeHTML)
-	return string(html)
 }

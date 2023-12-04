@@ -5,7 +5,6 @@ go 1.20
 require (
 	github.com/a-h/templ v0.2.432
 	github.com/gin-gonic/gin v1.9.1
-	github.com/gomarkdown/markdown v0.0.0-20230922112808-5421fefb8386
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/yuin/goldmark v1.6.0
 )

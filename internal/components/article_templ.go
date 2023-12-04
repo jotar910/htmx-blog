@@ -10,11 +10,8 @@ import "context"
 import "io"
 import "bytes"
 
-import "os"
-import "log"
-import "github.com/yuin/goldmark"
-import "github.com/yuin/goldmark/renderer/html"
 import "github.com/jotar910/htmx-templ/internal/models"
+import "github.com/jotar910/htmx-templ/internal/components/core"
 
 type ArticleOption struct {
 	Area      string
@@ -35,7 +32,7 @@ func byArea(area string) func(o ArticleOption) bool {
 	return func(o ArticleOption) bool { return o.Area == area }
 }
 
-func Article(article *models.Article, options ...ArticleOption) templ.Component {
+func ArticleDetails(article *models.Article, options ...ArticleOption) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -48,7 +45,7 @@ func Article(article *models.Article, options ...ArticleOption) templ.Component 
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = NavbarContainer().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components_core.NavbarContainer().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -74,11 +71,11 @@ func Article(article *models.Article, options ...ArticleOption) templ.Component 
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = articleContainer(article).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = articleDetailsContent(article).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = asideContainer(filter(options, byArea("aside"))).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = articleDetailsAsideContainer(filter(options, byArea("aside"))).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -104,7 +101,7 @@ func Article(article *models.Article, options ...ArticleOption) templ.Component 
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = FooterContainer().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components_core.FooterContainer().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -115,7 +112,7 @@ func Article(article *models.Article, options ...ArticleOption) templ.Component 
 	})
 }
 
-func articleContainer(article *models.Article) templ.Component {
+func articleDetailsContent(article *models.Article) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -141,7 +138,7 @@ func articleContainer(article *models.Article) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = rawHTML(mdToHTML(readArticle(article.Filename))).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = rawHTML(mdToUnsafeHTML(readArticle(article.Filename))).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -156,7 +153,7 @@ func articleContainer(article *models.Article) templ.Component {
 	})
 }
 
-func asideContainer(options []ArticleOption) templ.Component {
+func articleDetailsAsideContainer(options []ArticleOption) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -202,36 +199,4 @@ func asideContainer(options []ArticleOption) templ.Component {
 		}
 		return templ_7745c5c3_Err
 	})
-}
-
-func readArticle(filename string) string {
-	f, err := os.ReadFile("public/articles/" + filename)
-	if err != nil {
-		log.Printf("reading article file: %s", filename)
-		return ""
-	}
-	return string(f)
-}
-
-func rawHTML(html string) templ.Component {
-	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		_, err := io.WriteString(w, html)
-		return err
-	})
-}
-
-func mdToHTML(source string) string {
-	md := goldmark.New(
-		goldmark.WithRendererOptions(
-			html.WithXHTML(),
-			html.WithUnsafe(),
-		),
-	)
-
-	var buf bytes.Buffer
-	err := md.Convert([]byte(source), &buf)
-	if err != nil {
-		return err.Error()
-	}
-	return buf.String()
 }
