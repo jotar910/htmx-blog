@@ -6,15 +6,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/jotar910/htmx-templ/internal/components"
+	components_articlescarousel "github.com/jotar910/htmx-templ/internal/components/articles-carousel"
+	components_articleslinks "github.com/jotar910/htmx-templ/internal/components/articles-links"
+	components_articleslist "github.com/jotar910/htmx-templ/internal/components/articles-list"
+	components_highlights "github.com/jotar910/htmx-templ/internal/components/highlights"
+	components_mostseen "github.com/jotar910/htmx-templ/internal/components/most-seen"
+	components_recentlist "github.com/jotar910/htmx-templ/internal/components/recent-list"
 	"github.com/jotar910/htmx-templ/internal/models"
 	"github.com/jotar910/htmx-templ/internal/services"
-	"github.com/jotar910/htmx-templ/views/components"
-	components_articlescarousel "github.com/jotar910/htmx-templ/views/components/articles-carousel"
-	components_articleslinks "github.com/jotar910/htmx-templ/views/components/articles-links"
-	components_articleslist "github.com/jotar910/htmx-templ/views/components/articles-list"
-	components_highlights "github.com/jotar910/htmx-templ/views/components/highlights"
-	components_mostseen "github.com/jotar910/htmx-templ/views/components/most-seen"
-	components_recentlist "github.com/jotar910/htmx-templ/views/components/recent-list"
 )
 
 type PostsHandler struct {

@@ -12,7 +12,7 @@ import "bytes"
 
 import "github.com/jotar910/htmx-templ/internal/models"
 import "fmt"
-import "github.com/jotar910/htmx-templ/views/components/netflix-list"
+import "github.com/jotar910/htmx-templ/internal/components/netflix-list"
 
 func RecentListContainer(items []models.ArticleItem) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
