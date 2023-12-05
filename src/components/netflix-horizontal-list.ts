@@ -129,7 +129,7 @@ class NetflixHorizontalListComponent extends HTMLElement {
         const firstVisible = this.firstVisibleChild();
         const lastVisible = firstVisible !== null ? this.lastVisibleChildFrom(firstVisible) : null;
         this.updateArrowsVisibility(!!firstVisible, lastVisible !== null && lastVisible !== this.items.length - 1);
-    
+
     }
 
     private updateArrowsVisibility(isFirstVisible: boolean, isLastVisible: boolean): void {
@@ -146,4 +146,6 @@ class NetflixHorizontalListComponent extends HTMLElement {
     }
 }
 
-customElements.define("app-netflix-horizontal-list", NetflixHorizontalListComponent);
+if (customElements.get("app-netflix-horizontal-list") === undefined) {
+    customElements.define("app-netflix-horizontal-list", NetflixHorizontalListComponent);
+}

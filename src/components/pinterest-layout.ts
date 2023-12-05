@@ -96,4 +96,6 @@ class PinterestLayoutComponent extends HTMLElement {
     }
 }
 
-customElements.define("app-pinterest-layout", PinterestLayoutComponent);
+if (customElements.get("app-pinterest-layout") === undefined) {
+    customElements.define("app-pinterest-layout", PinterestLayoutComponent);
+}

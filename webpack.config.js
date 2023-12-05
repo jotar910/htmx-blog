@@ -55,7 +55,10 @@ class RunCommandOnFileChangePlugin {
 }
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: {
+        bundle: './src/index.ts',
+        'tw-elements': './src/tw-elements.ts'
+    },
     module: {
         rules: [
             {
@@ -85,7 +88,7 @@ module.exports = {
         new RunCommandOnFileChangePlugin()
     ],
     output: {
-        filename: 'bundle.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
     },
     watch: false,

@@ -1,5 +1,10 @@
 package components_core
 
+script load() {
+    document.body.style.visibility = "visible";
+    console.log(`First content paint: ${performance.now()}ms`);
+}
+
 templ Index(main templ.Component) {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -9,11 +14,11 @@ templ Index(main templ.Component) {
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			<link href="/dist/main.css" rel="stylesheet"/>
 		</head>
-		<body class="font-body text-body">
-			@main
-			<script type="text/javascript" src="/dist/bundle.js"></script>
+		<body class="font-body text-body invisible" hx-boost="true" onload={ load() }>
+			<script type="text/javascript" src="/dist/tw-elements.js" defer></script>
 			<script type="text/javascript" src="/htmx/bundle.js" defer></script>
-			<script type="text/javascript" src="/tw-elements/dist/js/tw-elements.umd.min.js" defer></script>
+			<script type="text/javascript" src="/dist/bundle.js" defer></script>
+			@main
 		</body>
 	</html>
 }

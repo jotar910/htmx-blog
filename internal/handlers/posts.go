@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
 
 	"github.com/jotar910/htmx-templ/internal/components"
@@ -19,6 +20,19 @@ type PostsHandler struct {
 func NewPostsHandler(postsService *services.PostsService) *PostsHandler {
 	return &PostsHandler{
 		postsService: postsService,
+	}
+}
+
+func render(c *gin.Context, html templ.Component) {
+	if c.GetHeader("HX-Request") == "" {
+		// This means it's the initial full page load
+		// Run your specific middleware logic here
+		// For example, initializing session data, etc.
+
+		// Log for demonstration purposes
+		c.HTML(http.StatusOK, "", components_core.Index(html))
+	} else {
+		c.HTML(http.StatusOK, "", html)
 	}
 }
 
@@ -42,8 +56,7 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 			mostSeen,
 			articlesList,
 		)
-		component := components_core.Index(homepage)
-		c.HTML(http.StatusOK, "", component)
+		render(c, homepage)
 	})
 
 	r.GET("/filtered", func(c *gin.Context) {
@@ -84,7 +97,6 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 				Area:      "aside",
 			},
 		)
-		component := components_core.Index(article)
-		c.HTML(http.StatusOK, "", component)
+		render(c, article)
 	})
 }

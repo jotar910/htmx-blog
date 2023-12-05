@@ -20,7 +20,7 @@ class CarouselComponent extends HTMLElement {
     }
     set currentItemIndex(v: number) {
         this._currentItemIndex = v;
-       this.updateIndicatorActive(); 
+        this.updateIndicatorActive();
     }
     _currentItemIndex = 0;
 
@@ -175,4 +175,6 @@ class CarouselComponent extends HTMLElement {
 
 }
 
-customElements.define("app-carousel", CarouselComponent);
+if (customElements.get("app-carousel") === undefined) {
+    customElements.define("app-carousel", CarouselComponent);
+}
