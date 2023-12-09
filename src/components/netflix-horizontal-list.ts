@@ -13,7 +13,7 @@ class NetflixHorizontalListComponent extends HTMLElement {
         this.shadow = this.attachShadow({ mode: "open" });
         this.shadow.innerHTML = `
         <style>
-            @import "dist/main.css";
+            @import "dist/bundle.css";
         </style>
         <template id="content">
             <div class="horizontal-list flex items-center relative">

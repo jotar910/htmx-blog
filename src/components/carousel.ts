@@ -38,7 +38,7 @@ class CarouselComponent extends HTMLElement {
         this.shadow = this.attachShadow({ mode: "open" });
         this.shadow.innerHTML = `
         <style>
-            @import "dist/main.css";
+            @import "dist/bundle.css";
         </style>
         <template id="container">
             <div class="gallery-list-wrapper">
