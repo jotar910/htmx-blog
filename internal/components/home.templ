@@ -1,9 +1,6 @@
 package components
 
-import "github.com/jotar910/htmx-templ/internal/components/core"
-
 templ Homepage(articlesCarousel, recentList, highlights, mostSeen, articlesList templ.Component) {
-	@components_core.NavbarContainer()
 	<section class="relative py-20">
 		<div class="container mx-auto">
 			{! articlesCarousel }
@@ -43,5 +40,4 @@ templ Homepage(articlesCarousel, recentList, highlights, mostSeen, articlesList 
 			{! articlesList }
 		</div>
 	</section>
-	@components_core.FooterContainer()
 }

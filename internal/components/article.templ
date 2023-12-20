@@ -1,7 +1,6 @@
 package components
 
 import "github.com/jotar910/htmx-templ/internal/models"
-import "github.com/jotar910/htmx-templ/internal/components/core"
 
 type ArticleOption struct {
 	Area      string
@@ -27,7 +26,6 @@ func byArea(area string) func(o ArticleOption) bool {
 }
 
 templ ArticleDetails(article *models.Article, options ...ArticleOption) {
-	@components_core.NavbarContainer()
 	<header class="flex flex-col gap-10 mt-10 empty:hidden">
 		for _, option := range filter(options, byArea("header")) {
 			<div class="container mx-auto">
@@ -48,7 +46,6 @@ templ ArticleDetails(article *models.Article, options ...ArticleOption) {
 			</section>
 		}
 	</footer>
-	@components_core.FooterContainer()
 }
 
 templ articleDetailsContent(article *models.Article) {

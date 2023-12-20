@@ -13,11 +13,10 @@ templ Index(main templ.Component) {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			<link href="/dist/bundle.css" rel="stylesheet"/>
+			<script type="text/javascript" src="/htmx/bundle.js" async></script>
+			<script type="text/javascript" src="/dist/bundle.js" defer></script>
 		</head>
 		<body class="font-body text-body invisible" hx-boost="true" onload={ load() }>
-			<script type="text/javascript" src="/dist/tw-elements.js" defer></script>
-			<script type="text/javascript" src="/htmx/bundle.js" defer></script>
-			<script type="text/javascript" src="/dist/bundle.js" defer></script>
 			@main
 		</body>
 	</html>

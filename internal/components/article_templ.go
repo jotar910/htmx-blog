@@ -11,7 +11,6 @@ import "io"
 import "bytes"
 
 import "github.com/jotar910/htmx-templ/internal/models"
-import "github.com/jotar910/htmx-templ/internal/components/core"
 
 type ArticleOption struct {
 	Area      string
@@ -53,10 +52,6 @@ func ArticleDetails(article *models.Article, options ...ArticleOption) templ.Com
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = components_core.NavbarContainer().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"flex flex-col gap-10 mt-10 empty:hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -106,10 +101,6 @@ func ArticleDetails(article *models.Article, options ...ArticleOption) templ.Com
 			}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</footer>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components_core.FooterContainer().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

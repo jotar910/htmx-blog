@@ -1,0 +1,10 @@
+package components_core
+
+templ DefaultPageLayout(main templ.Component) {
+	@NavbarContainer()
+	<main>
+		{! main }
+	</main>
+	@FooterContainer()
+	<script type="text/javascript" src="/dist/tw-elements.js" async></script>
+}

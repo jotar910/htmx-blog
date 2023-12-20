@@ -30,9 +30,9 @@ func render(c *gin.Context, html templ.Component) {
 		// For example, initializing session data, etc.
 
 		// Log for demonstration purposes
-		c.HTML(http.StatusOK, "", components_core.Index(html))
+		c.HTML(http.StatusOK, "", components_core.Index(components_core.DefaultPageLayout(html)))
 	} else {
-		c.HTML(http.StatusOK, "", html)
+		c.HTML(http.StatusOK, "", components_core.DefaultPageLayout(html))
 	}
 }
 
