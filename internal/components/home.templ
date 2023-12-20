@@ -17,14 +17,16 @@ templ Homepage(articlesCarousel, recentList, highlights, mostSeen, articlesList 
 			{! recentList }
 		</div>
 	</section>
-	<hr
- 		class={ divider(), "border-t-0 bg-primary opacity-100 dark:opacity-50" }
-	/>
-	<section class="relative py-20 bg-primary-50">
-		<div class="container mx-auto">
-			{! highlights }
-		</div>
-	</section>
+	if highlights != nil {
+		<hr
+ 			class={ divider(), "border-t-0 bg-primary opacity-100 dark:opacity-50" }
+		/>
+		<section class="relative py-20 bg-primary-50">
+			<div class="container mx-auto">
+				{! highlights }
+			</div>
+		</section>
+	}
 	<hr
  		class={ divider(), "border-t-0 bg-primary opacity-100 dark:opacity-50" }
 	/>

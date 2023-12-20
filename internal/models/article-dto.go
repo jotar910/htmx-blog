@@ -44,6 +44,7 @@ func (lf *ArticleListFilters) Decode(c *gin.Context) *ArticleListFilters {
 type Article struct {
 	ID       int64
 	Title    string
+	Image    LocalFile
 	Date     time.Time
 	Filename string
 }

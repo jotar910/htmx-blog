@@ -176,7 +176,7 @@ func highlightsListItem(article *models.ArticleItem, isMain bool) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-h-full\" loading=\"lazy\"></a><div class=\"flex flex-col overflow-hidden p-5\"><a class=\"block truncate text-lg md:text-xl mb-4 font-heading\" title=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"object-cover min-h-full min-w-full\" loading=\"lazy\"></a><div class=\"flex flex-col overflow-hidden p-5\"><a class=\"block truncate text-lg md:text-xl mb-4 font-heading\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

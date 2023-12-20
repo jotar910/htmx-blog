@@ -38,7 +38,7 @@
 <div class="author-section-full"> <!-- main wrapper for authors section -->
         <h2>About the Author</h2> <!-- section title -->
             <div class="author" data-id="author-Sergio-De-Simone"> <!-- main wrapper for each author -->
-                <a href="/profile/Sergio-De-Simone/" class="avatar author__avatar"><img src="https://cdn.infoq.com/statics_s1_20231128091129/images/profiles/NovciOoQOAYWqYqRQBFo97SuMm0xbUiC.jpg"></a>
+                <a href="/profile/Sergio-De-Simone/" class="avatar author__avatar"><img src="../../articles/markdown/image1.png"></a>
                 <div class="content-author">
                     <h4><strong>Sergio De Simone</strong></h4>
                     <div class="show-author-bio">

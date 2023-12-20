@@ -24,18 +24,18 @@ templ highlightsList(first, second, third *models.ArticleItem) {
 
 templ highlightsListItem(article *models.ArticleItem, isMain bool) {
 	<article
- 		class={ 
+ 		class={
             templ.SafeClass("grid grid-rows-[auto_1fr] max-h-[64rem] bg-base-100 dark:bg-base-300 shadow-lg rounded-lg hover:shadow-xl"),
             templ.KV(templ.SafeClass("md:row-start-1 md:row-end-3"), isMain),
         }
 	>
 		<a class="grid items-center overflow-hidden h-48 rounded-t-lg" href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>
-			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-h-full" loading="lazy"/>
+			<img alt={ article.Image.Name } src={ article.Image.Url } class="object-cover min-h-full min-w-full" loading="lazy"/>
 		</a>
 		<div class="flex flex-col overflow-hidden p-5">
 			<a class="block truncate text-lg md:text-xl mb-4 font-heading" title={ article.Title } href={ templ.SafeURL(fmt.Sprintf("./%d", article.ID)) }>{ article.Title }</a>
 			<div
- 				class={ 
+ 				class={
                      "special-scroll flex-grow overflow-auto mb-4 prose prose-headings:font-heading",
                      templ.KV(templ.SafeClass("md:hidden"), !isMain),
                  }

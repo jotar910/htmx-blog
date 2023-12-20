@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"net/http"
-	"time"
-
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
+	cerrors "github.com/jotar910/htmx-templ/pkg/errors"
+	"net/http"
+	"strconv"
 
 	"github.com/jotar910/htmx-templ/internal/components"
 	components_core "github.com/jotar910/htmx-templ/internal/components/core"
@@ -39,16 +39,48 @@ func render(c *gin.Context, html templ.Component) {
 func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 	r.GET("/", func(c *gin.Context) {
 		filters := new(models.ArticleListFilters).Decode(c)
-		list := ph.postsService.GetList(filters)
+		list, err := ph.postsService.GetList(filters)
+		if err != nil {
+			handleError(c, err)
+			return
+		}
 		articlesList := components.ArticlesListContainer(list, filters)
-		mostSeen := components.MostSeenContainer(list.Items)
-		highlights := components.HighlightsContainer(
-			&list.Items[0],
-			&list.Items[1],
-			&list.Items[2],
-		)
-		recentList := components.RecentListContainer(list.Items)
-		articlesCarousel := components.ArticlesCarousel(list.Items)
+
+		mostSeenList, err := ph.postsService.GetMostSeenPosts()
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+		mostSeen := components.MostSeenContainer(mostSeenList)
+
+		highlightsList, err := ph.postsService.GetHighlightPosts()
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+		var highlights templ.Component
+		if len(highlightsList) > 2 {
+			highlights = components.HighlightsContainer(
+				&highlightsList[0],
+				&highlightsList[1],
+				&highlightsList[2],
+			)
+		}
+
+		recent, err := ph.postsService.GetRecentPosts()
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+		recentList := components.RecentListContainer(recent)
+
+		carousel, err := ph.postsService.GetCarouselPosts()
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+		articlesCarousel := components.ArticlesCarousel(carousel)
+
 		homepage := components.Homepage(
 			articlesCarousel,
 			recentList,
@@ -60,14 +92,17 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 	})
 
 	r.GET("/filtered", func(c *gin.Context) {
-		term := c.Query("searchTerm")
-		filters := &models.ArticleListFilters{Term: term}
-		list := ph.postsService.GetList(filters)
+		filters := new(models.ArticleListFilters).Decode(c)
+		list, err := ph.postsService.GetList(filters)
+		if err != nil {
+			handleError(c, err)
+			return
+		}
 
 		if filters.Empty() {
-			c.Header("HX-Push-Url", "./#articles")
+			c.Header("HX-Push-Url", "./")
 		} else {
-			c.Header("HX-Push-Url", "./?"+filters.Encode()+"#articles")
+			c.Header("HX-Push-Url", "./?"+filters.Encode())
 		}
 
 		componentList := components.ArticlesListItemsResponse(list.Items)
@@ -78,25 +113,45 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 	})
 
 	r.GET("/:id", func(c *gin.Context) {
-		arg := &models.Article{
-			ID:       1,
-			Title:    "Testing this",
-			Date:     time.Now(),
-			Filename: "markdown.md",
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			handleError(c, cerrors.Wrap(err, cerrors.NotFound))
+			return
 		}
-		filters := new(models.ArticleListFilters).Decode(c)
-		list := ph.postsService.GetList(filters)
-		article := components.ArticleDetails(
-			arg,
-			components.ArticleOption{
-				Component: components.ArticlesLinksList(list.Items[:3]),
+
+		post, err := ph.postsService.GetPostById(id)
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+
+		pageOptions := make([]components.ArticleOption, 0)
+
+		articleLinks, err := ph.postsService.GetHighlightPosts()
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+		if len(articleLinks) > 0 {
+			pageOptions = append(pageOptions, components.ArticleOption{
+				Component: components.ArticlesLinksList(articleLinks),
 				Area:      "header",
-			},
-			components.ArticleOption{
-				Component: components.RelatedVerticalContainer(list.Items),
+			})
+		}
+
+		related, err := ph.postsService.GetRelatedPosts(id)
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+		if len(related) > 0 {
+			pageOptions = append(pageOptions, components.ArticleOption{
+				Component: components.RelatedVerticalContainer(related),
 				Area:      "aside",
-			},
-		)
+			})
+		}
+
+		article := components.ArticleDetails(post, pageOptions...)
 		render(c, article)
 	})
 }

@@ -1,177 +1,227 @@
 package storage
 
 import (
-	"strings"
-	"time"
-
+	"database/sql"
+	"fmt"
+	"github.com/jmoiron/sqlx"
 	"github.com/jotar910/htmx-templ/internal/models"
+	cerrors "github.com/jotar910/htmx-templ/pkg/errors"
+	"github.com/jotar910/htmx-templ/pkg/logger"
+	"github.com/pkg/errors"
 )
 
-func (mdb *InMemoryDatabase) GetPostsList() *models.ArticleList {
-	items := []models.ArticleItem{
-		{
-			ID:    1,
-			Title: "Exploring the Natural Beauty of Yellowstone",
-			Image: models.LocalFile{
-				Name: "yellowstone.png",
-				Url:  "https://images.unsplash.com/photo-1600670942298-b10325b17dea?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "Yellowstone National Park offers a unique blend of natural wonders, from geysers to wildlife. Discover the best trails and spots for an unforgettable adventure.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    2,
-			Title: "The Culinary Journey Through Italy",
-			Image: models.LocalFile{
-				Name: "italy-cuisine.png",
-				Url:  "https://images.unsplash.com/photo-1590522342323-5d224e217b01?q=80&w=2741&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "Italian cuisine is more than just pizza and pasta. Join us as we dive into the diverse flavors and traditional dishes from various regions of Italy.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    3,
-			Title: "The Best Kept Secrets of Tokyo City",
-			Image: models.LocalFile{
-				Name: "tokyo-secrets.png",
-				Url:  "https://plus.unsplash.com/premium_photo-1661763066898-6aac7f3758ab?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "Tokyo is a city of endless discovery. We've compiled a list of hidden gems and local favorites that go beyond the typical tourist spots.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    4,
-			Title: "Hiking the Majestic Trails of Patagonia",
-			Image: models.LocalFile{
-				Name: "patagonia-trails.png",
-				Url:  "https://images.unsplash.com/photo-1546662594-3da3e0603bc9?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "Patagonia's rugged landscapes are a hiker's paradise. Learn about the best times to visit, essential gear, and the most breathtaking trails.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    5,
-			Title: "A Guide to Sustainable Travel",
-			Image: models.LocalFile{
-				Name: "sustainable-travel.png",
-				Url:  "https://images.unsplash.com/photo-1590598016454-45b7e0ac125c?q=80&w=2343&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "Traveling responsibly is vital for preserving the world's treasures. Discover how you can make a positive impact on your next trip.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    6,
-			Title: "The Art of French Pastry: A Sweet Journey",
-			Image: models.LocalFile{
-				Name: "french-pastry.png",
-				Url:  "https://images.unsplash.com/photo-1546913686-e667f626c18d?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "French pastries are a feast for the senses. From macarons to croissants, we explore the history and techniques behind France's beloved sweets.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    7,
-			Title: "Discovering the Ancient Ruins of Machu Picchu",
-			Image: models.LocalFile{
-				Name: "machu-picchu.png",
-				Url:  "https://images.unsplash.com/photo-1590438524133-acf7279afb30?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "Machu Picchu is a testament to the Inca civilization's ingenuity. Join us as we uncover the history and mystery of this ancient wonder.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    8,
-			Title: "The Vibrant Street Art Scene of Berlin",
-			Image: models.LocalFile{
-				Name: "berlin-street-art.png",
-				Url:  "https://example.com/berlin-street-art.jpg",
-			},
-			Summary: "Berlin's street art tells the story of the city's cultural and political history. We take a closer look at the murals and the artists behind them.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    9,
-			Title: "The Ultimate Guide to New York's Coffee Culture",
-			Image: models.LocalFile{
-				Name: "ny-coffee.png",
-				Url:  "https://images.unsplash.com/photo-1611748746228-ddd4c32d966e?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "New York City's coffee scene is as diverse as its boroughs. Find out where to get the best cup and learn about the trends shaping NYC's coffee culture.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    10,
-			Title: "Chasing the Northern Lights: A Journey to Iceland",
-			Image: models.LocalFile{
-				Name: "northern-lights.png",
-				Url:  "https://images.unsplash.com/photo-1597395529362-361ba4b8ec24?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-			},
-			Summary: "The Northern Lights are one of nature's most spectacular displays. Learn the best times and places in Iceland to witness this breathtaking phenomenon.",
-			Date:    time.Now(),
-		},
-		{
-			ID:    11,
-			Title: "1: The Best United States Destinations to Visit in the Fall",
-			Image: models.LocalFile{
-				Name: "image.png",
-				Url:  "https://101trading.co.uk/wp-content/uploads/2015/04/horizon_00364590-1030x412.jpg",
-			},
-			Summary: `Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition.
-
-Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition. Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition.
-
-Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition.`,
-			Date: time.Now(),
-		},
-		{
-			ID:    12,
-			Title: "2: The Best United States Destinations to Visit in the Fall",
-			Image: models.LocalFile{
-				Name: "image.png",
-				Url:  "https://101trading.co.uk/wp-content/uploads/2015/04/horizon_00364590-1030x412.jpg",
-			},
-			Summary: `Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition.
-
-Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition. Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition.
-Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition. Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition.
-
-Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition.`,
-			Date: time.Now(),
-		},
-		{
-			ID:    13,
-			Title: "3: The Best United States Destinations to Visit in the Fall",
-			Image: models.LocalFile{
-				Name: "image.png",
-				Url:  "https://101trading.co.uk/wp-content/uploads/2015/04/horizon_00364590-1030x412.jpg",
-			},
-			Summary: `Are you looking to embrace all those autumnal vibes? Growing up in Southern California, we didn't really get any of those impressive color changes in the leaves nor a serious weather transition.`,
-			Date:    time.Now(),
-		},
+func (sqldb *SQLiteDatabase) GetPostsList() (*models.ArticleList, error) {
+	logger.L.Debug("getting posts list")
+	rows, err := sqldb.db.Queryx("select * from articles order by title")
+	if err != nil {
+		logger.L.Errorf("selecting posts list: %v", err)
+		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
 	}
-	list := &models.ArticleList{
+	items, err := scanPostItems(rows)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting posts list")
+	}
+	return &models.ArticleList{
 		Total: len(items),
 		Items: items,
-	}
-	return list
+	}, nil
 }
 
-func (mdb *InMemoryDatabase) GetPostsListFiltered(
+func (sqldb *SQLiteDatabase) GetPostsListFiltered(
 	filters *models.ArticleListFilters,
-) *models.ArticleList {
-	list := mdb.GetPostsList()
-
-	term := filters.Term
-	if term != "" {
-		newItems := make([]models.ArticleItem, 0)
-		for _, item := range list.Items {
-			if strings.Contains(strings.ToLower(item.Title), strings.ToLower(term)) {
-				newItems = append(newItems, item)
-			}
-		}
-		list.Items = newItems
-		list.Total = len(newItems)
+) (*models.ArticleList, error) {
+	if filters.Term == "" {
+		logger.L.Debug("getting posts list without filtering")
+		return sqldb.GetPostsList()
 	}
+	logger.L.Debugf("getting posts list with filtering: %+v", filters)
 
-	return list
+	rows, err := sqldb.db.Queryx(`
+		select *
+		from articles
+		where lower(title) like ?
+		order by title`,
+		fmt.Sprintf("%%%s%%", filters.Term),
+	)
+	if err != nil {
+		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	items, err := scanPostItems(rows)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting posts list with filtering")
+	}
+	return &models.ArticleList{
+		Total: len(items),
+		Items: items,
+	}, nil
+}
+
+func (sqldb *SQLiteDatabase) GetMostSeenPosts() ([]models.ArticleItem, error) {
+	logger.L.Debug("getting most seen posts")
+
+	rows, err := sqldb.db.Queryx(`
+		select articles.*
+		from articles
+		inner join (
+		    select article_id
+		    from article_views
+		    order by views desc, article_id asc
+			limit 10
+		) article_views
+		on articles.id = article_views.article_id`,
+	)
+	if err != nil {
+		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	items, err := scanPostItems(rows)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting most seen posts")
+	}
+	return items, nil
+}
+
+func (sqldb *SQLiteDatabase) GetHighlightPosts() ([]models.ArticleItem, error) {
+	logger.L.Debug("getting highlight posts")
+
+	rows, err := sqldb.db.Queryx(`
+		select articles.*
+		from articles
+		inner join (
+		    select article_highlights.article_id, article_views.views
+    		from article_highlights
+             left outer join article_views
+			 on article_highlights.article_id = article_views.article_id
+    		order by article_views.views desc, article_highlights.article_id asc
+    		limit 3
+		) article_highlights
+		on articles.id = article_highlights.article_id`,
+	)
+	if err != nil {
+		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	items, err := scanPostItems(rows)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting highlight posts")
+	}
+	return items, nil
+}
+
+func (sqldb *SQLiteDatabase) GetRecentPosts() ([]models.ArticleItem, error) {
+	logger.L.Debug("getting recent posts")
+
+	rows, err := sqldb.db.Queryx(`
+		select articles.*
+		from articles
+		order by timestamp desc
+		limit 10`,
+	)
+	if err != nil {
+		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	items, err := scanPostItems(rows)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting recent posts")
+	}
+	return items, nil
+}
+
+func (sqldb *SQLiteDatabase) GetCarouselPosts() ([]models.ArticleItem, error) {
+	logger.L.Debug("getting carousel posts")
+
+	rows, err := sqldb.db.Queryx(`
+		select articles.*
+		from articles
+		where id in (
+		    select article_id
+		    from article_carousel
+		)
+		order by timestamp desc`,
+	)
+	if err != nil {
+		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	items, err := scanPostItems(rows)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting carousel posts")
+	}
+	return items, nil
+}
+
+func (sqldb *SQLiteDatabase) GetRelatedPosts(id int) ([]models.ArticleItem, error) {
+	logger.L.Debugf("getting related posts to %d", id)
+
+	rows, err := sqldb.db.Queryx(`
+		select articles.*
+		from articles
+		where
+			id != $0
+			and id in (
+				select distinct article_tags.article_id
+				from article_tags
+				inner join (
+					select article_tags.*
+					from articles
+					inner join article_tags
+					on articles.id = article_tags.article_id
+					where articles.id = $0
+				) as related_article_tags
+				on article_tags.tag_name = related_article_tags.tag_name
+				limit 10
+			)`,
+		id,
+	)
+	if err != nil {
+		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	items, err := scanPostItems(rows)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting related posts")
+	}
+	return items, nil
+}
+
+func (sqldb *SQLiteDatabase) GetPostById(id int) (*models.Article, error) {
+	logger.L.Debugf("getting post by id %d", id)
+
+	entity := new(models.ArticleEntity)
+	err := sqldb.db.Get(
+		entity,
+		`select articles.*
+		from articles
+		where id = ?
+		LIMIT 1`,
+		id,
+	)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, cerrors.Wrap(errors.Wrap(err, "getting post by id"), cerrors.NotFound)
+		}
+		return nil, cerrors.Wrap(errors.Wrap(err, "getting post by id"), cerrors.InternalServerError)
+	}
+	return models.FromArticleEntityToArticle(entity), nil
+}
+
+func scanPostItems(rows *sqlx.Rows) ([]models.ArticleItem, error) {
+	items := make([]models.ArticleItem, 0)
+	for rows.Next() {
+		item, err := scanPostItem(rows)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, *item)
+	}
+	return items, nil
+}
+
+func scanPostItem(row StructScanner) (*models.ArticleItem, error) {
+	var item models.ArticleEntity
+	if err := row.StructScan(&item); err != nil {
+		logger.L.Errorf("scanning post item: %v", err)
+		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	return models.FromArticleEntityToArticleItem(&item), nil
+}
+
+type StructScanner interface {
+	StructScan(any) error
 }

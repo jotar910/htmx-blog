@@ -10,16 +10,16 @@ import "github.com/a-h/templ"
 import "os"
 import "io"
 import "context"
-import "log"
+import "github.com/jotar910/htmx-templ/pkg/logger"
 import "github.com/yuin/goldmark"
 import "github.com/yuin/goldmark/renderer/html"
 import "bytes"
 import "github.com/microcosm-cc/bluemonday"
 
 func readArticle(filename string) string {
-	f, err := os.ReadFile("public/articles/" + filename)
+	f, err := os.ReadFile("public/articles/" + filename + "/main.md")
 	if err != nil {
-		log.Printf("reading article file: %s", filename)
+		logger.L.Errorf("reading article file: %s", filename)
 		return ""
 	}
 	return string(f)
