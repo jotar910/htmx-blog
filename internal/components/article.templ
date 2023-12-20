@@ -8,6 +8,10 @@ type ArticleOption struct {
 	Component templ.Component
 }
 
+script loadArticle() {
+    console.log('joao test');
+}
+
 func filter[T any](values []T, by func(v T) bool) []T {
 	var res = make([]T, 0)
 	for _, v := range values {
@@ -50,7 +54,7 @@ templ ArticleDetails(article *models.Article, options ...ArticleOption) {
 templ articleDetailsContent(article *models.Article) {
 	<section>
 		<h1 class="mb-10 text-3xl font-semibold font-heading">{ article.Title }</h1>
-		<div class="prose prose-headings:font-heading prose-headings:font-semibold max-w-none">
+		<div is="blog-post" class="prose prose-headings:font-heading prose-headings:font-semibold max-w-none" data-post={ article.Filename } onload={ loadArticle() }>
 			{! rawHTML(mdToUnsafeHTML(readArticle(article.Filename))) }
 		</div>
 	</section>
