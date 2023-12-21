@@ -1,0 +1,14 @@
+{
+    "name": "watch-templ-plugin",
+    "version": "1.0.0",
+    "description": "A simple webpack plugin that watch for file changes and when files with extension `.templ` are modified it executes \"templ generate\" command on your project.",
+    "main": "index.js",
+    "keywords": [
+        "webpack",
+        "templ",
+        "golang",
+        "javascript"
+    ],
+    "author": "joaordev@gmail.com",
+    "license": "ISC"
+}

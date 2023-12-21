@@ -1,58 +1,6 @@
 const path = require('path');
-const { exec } = require('child_process');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-class RunCommandOnFileChangePlugin {
-    constructor() {
-        this.firstTime = true;
-        this.emptyMap = new Map();
-        this.previousTimestamps = new Map();
-    }
-
-    async apply(compiler) {
-        console.debug('generating go templates');
-        await this.generateTempl();
-
-        compiler.hooks.watchRun.tapPromise('RunCommandOnTemplChangePlugin', async (compilation) => {
-            const currentTimestamps = compilation.fileTimestamps || this.emptyMap;
-            const changedFiles = new Set();
-
-            for (const [path, timestamp] of currentTimestamps) {
-                if (this.previousTimestamps.get(path) !== timestamp) {
-                    changedFiles.add(path);
-                }
-            }
-
-            this.previousTimestamps = new Map(currentTimestamps);
-
-            if (this.firstTime) {
-                this.firstTime = false;
-                return;
-            }
-
-            const hasTemplChanges = !!changedFiles.size && Array.from(changedFiles).some(file => file.endsWith('.templ'));
-
-            console.debug('generating go templates:', hasTemplChanges);
-
-            if (hasTemplChanges) {
-                await this.generateTempl();
-            }
-        });
-    }
-
-    generateTempl() {
-        return new Promise((resolve) => {
-            exec('templ generate', (err, stdout, stderr) => {
-                if (err) {
-                    console.error(`Error: ${stderr}`);
-                } else {
-                    console.log(`stdout: ${stdout}`);
-                }
-                resolve();
-            });
-        });
-    }
-}
+const WatchTemplChangesPlugin = require('watch-templ-plugin');
 
 module.exports = {
     entry: {
@@ -85,7 +33,7 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: '[name].css',
         }),
-        new RunCommandOnFileChangePlugin()
+        new WatchTemplChangesPlugin()
     ],
     output: {
         filename: '[name].js',
