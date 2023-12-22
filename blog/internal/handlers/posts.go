@@ -30,9 +30,9 @@ func render(c *gin.Context, html templ.Component) {
 		// For example, initializing session data, etc.
 
 		// Log for demonstration purposes
-		c.HTML(http.StatusOK, "", components_core.Index(components_core.DefaultPageLayout(html)))
+		c.HTML(http.StatusOK, "", components_core.Index(html))
 	} else {
-		c.HTML(http.StatusOK, "", components_core.DefaultPageLayout(html))
+		c.HTML(http.StatusOK, "", html)
 	}
 }
 
@@ -88,7 +88,7 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 			mostSeen,
 			articlesList,
 		)
-		render(c, homepage)
+		render(c, components_core.DefaultPageLayout(homepage))
 	})
 
 	r.GET("/filtered", func(c *gin.Context) {
@@ -106,10 +106,10 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 		}
 
 		componentList := components.ArticlesListItemsResponse(list.Items)
-		c.HTML(http.StatusOK, "", componentList)
+		render(c, componentList)
 
 		componentCounter := components.ArticlesListCountResponse(list.Total, filters.Term)
-		c.HTML(http.StatusOK, "", componentCounter)
+		render(c, componentCounter)
 	})
 
 	r.GET("/:id", func(c *gin.Context) {
@@ -152,6 +152,6 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 		}
 
 		article := components.ArticleDetails(post, pageOptions...)
-		render(c, article)
+		render(c, components_core.DefaultPageLayout(article))
 	})
 }
