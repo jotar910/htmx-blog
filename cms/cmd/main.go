@@ -4,7 +4,9 @@ import (
 	_ "github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
+	"os"
 
 	"github.com/jotar910/buzzer-cms/internal/handlers"
 	"github.com/jotar910/buzzer-cms/internal/services"
@@ -15,11 +17,15 @@ import (
 func main() {
 	logger.Init()
 
+	if err := godotenv.Overload(); err != nil {
+		logger.L.Fatalf("error loading the .env file: %v", err)
+	}
+
 	r := gin.Default()
 	r.HTMLRender = &TemplRender{}
 
 	logger.L.Info("connecting to db...")
-	db, err := sqlx.Open("sqlite3", "../blog/articles.db")
+	db, err := sqlx.Open("sqlite3", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		logger.L.Fatal(err.Error())
 	}
