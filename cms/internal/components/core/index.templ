@@ -1,0 +1,23 @@
+package components_core
+
+script load() {
+    document.body.style.visibility = "visible";
+    console.log(`First content paint: ${performance.now()}ms`);
+}
+
+templ Index(main templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<title>buzzer | Tech Blog</title>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<link href="/dist/bundle.css" rel="stylesheet"/>
+			<script type="text/javascript" src="/htmx/bundle.js" async></script>
+			<script type="text/javascript" src="/dist/bundle.js" defer></script>
+		</head>
+		<body class="font-body text-body invisible" hx-boost="true" onload={ load() }>
+			@main
+		</body>
+	</html>
+}
