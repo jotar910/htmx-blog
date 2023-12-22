@@ -5,6 +5,7 @@ import "github.com/jotar910/buzzer-cms/internal/models"
 type PostsDatabase interface {
 	GetPostsList() (*models.ArticleList, error)
 	GetPostsListFiltered(filters *models.ArticleListFilters) (*models.ArticleList, error)
+	GetPostById(id int) (*models.Article, error)
 }
 
 type PostsService struct {
@@ -22,4 +23,8 @@ func (ps *PostsService) GetList(filters *models.ArticleListFilters) (*models.Art
 		return ps.postsDB.GetPostsList()
 	}
 	return ps.postsDB.GetPostsListFiltered(filters)
+}
+
+func (ps *PostsService) GetPostById(id int) (*models.Article, error) {
+	return ps.postsDB.GetPostById(id)
 }

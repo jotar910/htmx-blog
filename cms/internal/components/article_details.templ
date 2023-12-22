@@ -1,0 +1,60 @@
+package components
+
+import "github.com/jotar910/buzzer-cms/internal/models"
+import "fmt"
+
+templ ArticleDetails(article *models.Article) {
+	<a href="/" class="block mt-8">◁ back</a>
+	<section class="p-4">
+		<h1 class="mb-4 text-3xl text-heading font-heading">{ article.Title }</h1>
+		<dl class="grid grid-cols-[auto_1fr] gap-x-4 mb-4">
+			<dt class="font-semibold">Date</dt>
+			<dd>{ article.Date.Format("Jan 02, 2006") }</dd>
+			<dt class="font-semibold">Filename</dt>
+			<dd>{ article.Filename }</dd>
+			<dt class="font-semibold">Image</dt>
+			<dd>{ article.Image.Name }</dd>
+		</dl>
+		<div class="mb-4 w-full max-w-sm h-64">
+			<img src={ article.Image.Url } class="w-full h-full object-center object-cover" alt={ article.Image.Name }/>
+		</div>
+		<p class="mb-4 prose">{ article.Summary }</p>
+		<hr class="mb-4"/>
+		@ArticleDetailsContent(article.ID, article.Filename, false)
+	</section>
+}
+
+templ ArticleDetailsContent(id int64, filename string, isHTML bool) {
+	<section id="blog-content" class="flex flex-col">
+		<form
+ 			id="switch-form"
+ 			hx-swap="innerHTML"
+ 			hx-target="#blog-content"
+ 			hx-select="#blog-content"
+ 			hx-get={ fmt.Sprintf("/%d/content", id) }
+ 			hx-params="*"
+ 			class="hidden"
+		>
+			<input
+ 				type="text"
+ 				name="type"
+ 				if isHTML {
+					value="post"
+				} else {
+					value="html"
+				}
+			/>
+		</form>
+		if isHTML {
+			<button type="submit" form="switch-form" class="btn-outlined btn-primary ml-auto w-36">Show post</button>
+			<code class="block mt-4 break-words">
+				{! rawHTML(escapeHTML(readArticle(filename))) }
+			</code>
+		} else {
+			<button type="submit" form="switch-form" class="btn-outlined btn-primary ml-auto w-36">Show html</button>
+			<blog-post class="prose prose-headings:font-heading prose-headings:font-semibold max-w-none mt-4" data-post={ filename }>
+				{! rawHTML(mdToUnsafeHTML(readArticle(filename))) }
+			</blog-post>
+		}
+	</section>
+}

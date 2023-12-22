@@ -38,3 +38,12 @@ func (lf *ArticleListFilters) Decode(c *gin.Context) (*ArticleListFilters, error
 	}
 	return lf, nil
 }
+
+type Article struct {
+	ID       int64
+	Title    string
+	Summary  string
+	Image    LocalFile
+	Filename string
+	Date     time.Time
+}

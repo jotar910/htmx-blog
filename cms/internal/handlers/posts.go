@@ -6,7 +6,9 @@ import (
 	components_core "github.com/jotar910/buzzer-cms/internal/components/core"
 	"github.com/jotar910/buzzer-cms/internal/models"
 	"github.com/jotar910/buzzer-cms/internal/services"
+	cerrors "github.com/jotar910/buzzer-cms/pkg/errors"
 	"github.com/jotar910/buzzer-cms/pkg/logger"
+	"strconv"
 )
 
 type PostsHandler struct {
@@ -28,9 +30,9 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 		}
 		articlesTableTempl := components.ArticlesTable(articlesList)
 
-		pageLayout := components_core.DefaultPageLayout(articlesTableTempl)
-		homepage := components.Homepage(pageLayout)
-		render(c, homepage)
+		homepage := components.Homepage(articlesTableTempl)
+		pageLayout := components_core.DefaultPageLayout(homepage)
+		render(c, pageLayout)
 	})
 
 	r.POST("/search", func(c *gin.Context) {
@@ -48,5 +50,41 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 		}
 		articlesTableTempl := components.ArticlesTableSearchResult(articlesList)
 		render(c, articlesTableTempl)
+	})
+
+	r.GET("/:id", func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			handleError(c, cerrors.Wrap(err, cerrors.NotFound))
+			return
+		}
+
+		post, err := ph.postsService.GetPostById(id)
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+
+		article := components.ArticleDetails(post)
+		pageLayout := components_core.DefaultPageLayout(article)
+		render(c, pageLayout)
+	})
+
+	r.GET("/:id/content", func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			handleError(c, cerrors.Wrap(err, cerrors.NotFound))
+			return
+		}
+		typ := c.DefaultQuery("type", "post")
+
+		post, err := ph.postsService.GetPostById(id)
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+
+		article := components.ArticleDetailsContent(post.ID, post.Filename, typ == "html")
+		render(c, article)
 	})
 }

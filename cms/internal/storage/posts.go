@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/jotar910/buzzer-cms/internal/models"
@@ -92,6 +93,27 @@ func scanPostItems(rows *sqlx.Rows) ([]models.ArticleItem, error) {
 		items = append(items, *item)
 	}
 	return items, nil
+}
+
+func (sqldb *SQLiteDatabase) GetPostById(id int) (*models.Article, error) {
+	logger.L.Debugf("getting post by id %d", id)
+
+	entity := new(models.ArticleEntity)
+	err := sqldb.db.Get(
+		entity,
+		`select articles.*
+		from articles
+		where id = ?
+		LIMIT 1`,
+		id,
+	)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, cerrors.Wrap(errors.Wrap(err, "getting post by id"), cerrors.NotFound)
+		}
+		return nil, cerrors.Wrap(errors.Wrap(err, "getting post by id"), cerrors.InternalServerError)
+	}
+	return models.FromArticleEntityToArticle(entity), nil
 }
 
 func scanPostItem(row StructScanner) (*models.ArticleItem, error) {

@@ -39,7 +39,7 @@ func main() {
 
 	r.Static("/htmx", "./public/htmx")
 	r.Static("/assets", "./public/assets")
-	r.Static("/articles", "./public/articles")
+	r.Static("/articles", os.Getenv("ARTICLES_FOLDER"))
 	r.Static("/dist", "./dist")
 
 	logger.L.Info("running server...")
