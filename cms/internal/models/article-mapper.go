@@ -11,6 +11,7 @@ func FromArticleEntityToArticleItem(entity *ArticleEntity) *ArticleItem {
 		Title:    entity.Title,
 		Filename: entity.Filename,
 		Date:     time.UnixMilli(entity.Timestamp),
+		Carousel: entity.CarouselID != nil,
 	}
 }
 
@@ -25,5 +26,6 @@ func FromArticleEntityToArticle(entity *ArticleEntity) *Article {
 		},
 		Date:     time.UnixMilli(entity.Timestamp),
 		Filename: entity.Filename,
+		Carousel: entity.CarouselID != nil,
 	}
 }

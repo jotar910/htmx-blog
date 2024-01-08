@@ -7,4 +7,6 @@ type ArticleEntity struct {
 	Image     string
 	Summary   string
 	Timestamp int64
+	// Joins
+	CarouselID *int64 `db:"carousel_id"`
 }

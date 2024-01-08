@@ -13,12 +13,11 @@ templ ArticlesTable(articlesList *models.ArticleList) {
  		hx-select="#tbody-articles"
  		hx-swap="outerHTML"
  		hx-trigger="keyup changed delay:500ms from:[data-filter], change changed from:[data-filter]"
-	>
-		<table class="w-full border-separate border-spacing-2">
-			@tableHead()
-			@tableBody(articlesList.Items)
-		</table>
-	</form>
+	></form>
+	<table class="w-full border-separate border-spacing-2">
+		@tableHead()
+		@tableBody(articlesList.Items)
+	</table>
 }
 
 templ ArticlesTableSearchResult(articlesList *models.ArticleList) {
@@ -31,7 +30,6 @@ templ ArticlesTableSearchResult(articlesList *models.ArticleList) {
 templ tableHead() {
 	<thead>
 		<tr>
-			<th></th>
 			<th>
 				<div class="relative mb-3" data-te-input-wrapper-init>
 					<input
@@ -42,6 +40,7 @@ templ tableHead() {
  						id="article-id"
  						placeholder="*"
  						hx-trigger="keyup changed delay:500ms from:#filter-form"
+ 						form="filter-form"
 					/>
 					<label
  						for="article-id"
@@ -60,6 +59,7 @@ templ tableHead() {
  						id="article-title"
  						name="title"
  						placeholder="*"
+ 						form="filter-form"
 					/>
 					<label
  						for="article-title"
@@ -78,6 +78,7 @@ templ tableHead() {
  						id="article-filename"
  						name="filename"
  						placeholder="*"
+ 						form="filter-form"
 					/>
 					<label
  						for="article-filename"
@@ -96,6 +97,7 @@ templ tableHead() {
  						id="article-date"
  						name="date"
  						placeholder="*"
+ 						form="filter-form"
 					/>
 					<label
  						for="article-date"
@@ -105,6 +107,7 @@ templ tableHead() {
 					</label>
 				</div>
 			</th>
+			<th>Carousel?</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -113,14 +116,23 @@ templ tableHead() {
 templ tableBody(articles []models.ArticleItem) {
 	<tbody id="tbody-articles">
 		for _, article := range articles {
-			<tr>
-				<td class="align-middle">
-					<input type="checkbox"/>
-				</td>
+			<tr class="hover:opacity-75">
 				<td>{ fmt.Sprintf("%d", article.ID) }</td>
 				<td>{ article.Title }</td>
 				<td>{ article.Filename }</td>
 				<td>{ article.Date.Format("Jan 02, 2006") }</td>
+				<td class="align-middle text-center">
+					<input
+ 						hx-patch={ "/" + strconv.Itoa(int(article.ID)) }
+ 						hx-disabled-elt="this"
+ 						hx-vals="js:{carousel: event.target.checked}"
+ 						id={ "check-carousel-" + strconv.Itoa(int(article.ID)) }
+ 						type="checkbox"
+ 						if article.Carousel {
+							checked
+						}
+					/>
+				</td>
 				<td
  					hx-target="body"
  					hx-select="main"

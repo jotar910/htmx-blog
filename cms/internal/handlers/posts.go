@@ -7,7 +7,7 @@ import (
 	"github.com/jotar910/buzzer-cms/internal/models"
 	"github.com/jotar910/buzzer-cms/internal/services"
 	cerrors "github.com/jotar910/buzzer-cms/pkg/errors"
-	"github.com/jotar910/buzzer-cms/pkg/logger"
+	"net/http"
 	"strconv"
 )
 
@@ -41,7 +41,6 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 			handleError(c, err)
 			return
 		}
-		logger.L.Debugf("%+v", filters)
 
 		articlesList, err := ph.postsService.GetList(filters)
 		if err != nil {
@@ -86,5 +85,26 @@ func (ph *PostsHandler) RegisterPosts(r *gin.RouterGroup) {
 
 		article := components.ArticleDetailsContent(post.ID, post.Filename, typ == "html")
 		render(c, article)
+	})
+
+	r.PATCH("/:id", func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			handleError(c, cerrors.Wrap(err, cerrors.NotFound))
+			return
+		}
+		payload, err := new(models.ArticlePatch).Decode(c)
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+
+		_, err = ph.postsService.PatchPost(id, payload)
+		if err != nil {
+			handleError(c, err)
+			return
+		}
+
+		c.Status(http.StatusOK)
 	})
 }

@@ -1,7 +1,7 @@
 @import './fonts.scss';
 @import './tailwind.scss';
+@import './htmx.scss';
 
 @tailwind base;      /* This injects Tailwind's base styles, which include normalize.css and any base styles you configure. */
 @tailwind components; /* This injects any component classes you've defined in your Tailwind config or any Tailwind component plugins you're using. */
 @tailwind utilities;  /* This injects all of Tailwind's utility classes, which is the core of what Tailwind provides. */
-

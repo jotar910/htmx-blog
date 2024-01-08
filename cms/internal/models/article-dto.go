@@ -18,6 +18,7 @@ type ArticleItem struct {
 	Title    string
 	Filename string
 	Date     time.Time
+	Carousel bool
 }
 
 type ArticleListFilters struct {
@@ -46,4 +47,18 @@ type Article struct {
 	Image    LocalFile
 	Filename string
 	Date     time.Time
+	// Customizations
+	Carousel bool
+}
+
+type ArticlePatch struct {
+	Carousel *bool `form:"carousel"`
+}
+
+func (lf *ArticlePatch) Decode(c *gin.Context) (*ArticlePatch, error) {
+	if err := c.Bind(lf); err != nil {
+		logger.L.Errorf("parsing article patch payload: %v", err)
+		return nil, cerrors.Wrap(err, cerrors.BadRequest)
+	}
+	return lf, nil
 }

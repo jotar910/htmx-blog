@@ -14,7 +14,13 @@ import (
 
 func (sqldb *SQLiteDatabase) GetPostsList() (*models.ArticleList, error) {
 	logger.L.Debug("getting posts list")
-	rows, err := sqldb.db.Queryx("select * from articles order by title")
+	query := `
+		select articles.*, article_carousel.id as carousel_id
+		from articles
+		left outer join article_carousel
+		on articles.id = article_carousel.article_id
+		order by title`
+	rows, err := sqldb.db.Queryx(query)
 	if err != nil {
 		logger.L.Errorf("selecting posts list: %v", err)
 		return nil, cerrors.Wrap(err, cerrors.InternalServerError)
@@ -41,7 +47,7 @@ func (sqldb *SQLiteDatabase) GetPostsListFiltered(
 
 	whereClauses := make([]WhereClause, 0)
 	if filters.ID != "" {
-		whereClauses = append(whereClauses, WhereClause{"cast(id as text) like ?", fmt.Sprintf("%%%s%%", filters.ID)})
+		whereClauses = append(whereClauses, WhereClause{"cast(articles.id as text) like ?", fmt.Sprintf("%%%s%%", filters.ID)})
 	}
 	if filters.Title != "" {
 		whereClauses = append(whereClauses, WhereClause{"lower(title) like ?", fmt.Sprintf("%%%s%%", filters.Title)})
@@ -59,8 +65,10 @@ func (sqldb *SQLiteDatabase) GetPostsListFiltered(
 	}
 
 	query := fmt.Sprintf(`
-		select *
+		select articles.*, article_carousel.id as carousel_id
 		from articles
+		left outer join article_carousel
+		on articles.id = article_carousel.article_id
 		where %s
 		order by title`,
 		strings.Join(mapArray(whereClauses, func(v WhereClause, _ int) string { return v.query }), " and "),
@@ -83,6 +91,54 @@ func (sqldb *SQLiteDatabase) GetPostsListFiltered(
 	}, nil
 }
 
+func (sqldb *SQLiteDatabase) GetPostById(id int) (*models.Article, error) {
+	logger.L.Debugf("getting post by id %d", id)
+
+	entity := new(models.ArticleEntity)
+	err := sqldb.db.Get(
+		entity,
+		`select articles.*, article_carousel.id as carousel_id
+		from articles
+		left outer join article_carousel
+		on articles.id = article_carousel.article_id
+		where articles.id = ?
+		limit 1`,
+		id,
+	)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, cerrors.Wrap(errors.Wrap(err, "getting post by id"), cerrors.NotFound)
+		}
+		return nil, cerrors.Wrap(errors.Wrap(err, "getting post by id"), cerrors.InternalServerError)
+	}
+	return models.FromArticleEntityToArticle(entity), nil
+}
+
+func (sqldb *SQLiteDatabase) AddCarouselArticle(id int64) error {
+	logger.L.Debugf("adding article %d to carousel", id)
+	query := `insert into article_carousel(article_id) values ($1)`
+	_, err := sqldb.db.Exec(query, id)
+	if err != nil {
+		return cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	return nil
+}
+
+func (sqldb *SQLiteDatabase) RemoveCarouselArticle(id int64) error {
+	logger.L.Debugf("removing article %d from carousel", id)
+	query := `delete from article_carousel where article_id = $1`
+	res, err := sqldb.db.Exec(query, id)
+	if err != nil {
+		return cerrors.Wrap(err, cerrors.InternalServerError)
+	}
+	if n, err := res.RowsAffected(); err != nil {
+		return cerrors.Wrap(err, cerrors.InternalServerError)
+	} else if n == 0 {
+		return cerrors.Wrap(fmt.Errorf("no article was removed"), cerrors.NotFound)
+	}
+	return nil
+}
+
 func scanPostItems(rows *sqlx.Rows) ([]models.ArticleItem, error) {
 	items := make([]models.ArticleItem, 0)
 	for rows.Next() {
@@ -93,27 +149,6 @@ func scanPostItems(rows *sqlx.Rows) ([]models.ArticleItem, error) {
 		items = append(items, *item)
 	}
 	return items, nil
-}
-
-func (sqldb *SQLiteDatabase) GetPostById(id int) (*models.Article, error) {
-	logger.L.Debugf("getting post by id %d", id)
-
-	entity := new(models.ArticleEntity)
-	err := sqldb.db.Get(
-		entity,
-		`select articles.*
-		from articles
-		where id = ?
-		LIMIT 1`,
-		id,
-	)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, cerrors.Wrap(errors.Wrap(err, "getting post by id"), cerrors.NotFound)
-		}
-		return nil, cerrors.Wrap(errors.Wrap(err, "getting post by id"), cerrors.InternalServerError)
-	}
-	return models.FromArticleEntityToArticle(entity), nil
 }
 
 func scanPostItem(row StructScanner) (*models.ArticleItem, error) {
